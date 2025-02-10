@@ -1,5 +1,5 @@
 -- Azzy's Silly Trinkets (AST)
--- glabls.lua 
+-- globals.lua 
 
 AST = {
 	DEBUG_MODE = true,
@@ -19,7 +19,7 @@ AST = {
             BASE_MULT = 1.5,
             BOSS_MIN = 2,
             BOSS_MAX = 10,
-    
+
             TIMER_SECONDS = 8
         },
 
@@ -33,7 +33,7 @@ AST = {
             BOSS_MIN = 2,
             BOSS_MAX = 10
         },
-        
+
         THE_INSECURITY = {
             ATLAS_ROW = 2,
             NAME = "the_insecurity",
@@ -44,7 +44,7 @@ AST = {
             BOSS_MIN = 2,
             BOSS_MAX = 10
         },
-        
+
         THE_GAMBIT = {
             ATLAS_ROW = 3,
             NAME = "the_gambit",
@@ -55,7 +55,7 @@ AST = {
             BOSS_MIN = 2,
             BOSS_MAX = 10
         },
-        
+
         THE_PIT = {
             ATLAS_ROW = 4,
             NAME = "the_pit",
@@ -66,7 +66,7 @@ AST = {
             BOSS_MIN = 2,
             BOSS_MAX = 10
         },
-        
+
         THE_CONSTRUCT = {
             ATLAS_ROW = 5,
             NAME = "the_construct",

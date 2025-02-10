@@ -1,7 +1,9 @@
 -- Azzy's Silly Trinkets (AST)
 -- blind.lua 
 
--- Registering Blinds Atlas
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Registering Atlas
+------------------------------------------------------------------------------------------------------------------------------------------------------
 SMODS.Atlas {
 	key = AST.BLIND.ATLAS,
 	path = AST.BLIND.ATLAS .. ".png",
@@ -10,6 +12,10 @@ SMODS.Atlas {
 	px = AST.BLIND.ATLAS_WIDTH,
 	py = AST.BLIND.ATLAS_HEIGHT
 }
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Registering modded boss blinds
+------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Registering The Clock
 SMODS.Blind {
@@ -20,24 +26,24 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_CLOCK.REWARD,
 	mult = AST.BLIND.THE_CLOCK.BASE_MULT,
 	boss = { min = AST.BLIND.THE_CLOCK.BOSS_MIN, max = AST.BLIND.THE_CLOCK.BOSS_MAX },
-	set_blind = function(self)
+	set_blind = function(_)
 		G.GAME.current_round.the_clock.remaining_time = AST.BLIND.THE_CLOCK.TIMER_SECONDS
 		G.GAME.current_round.the_clock.paused = false
 	end,
-	press_play = function(self)
+	press_play = function(_)
 		G.GAME.current_round.the_clock.remaining_time = AST.BLIND.THE_CLOCK.TIMER_SECONDS
 		G.GAME.current_round.the_clock.paused = true
 		G.GAME.current_round.the_clock.hand_is_being_played = true
 	end,
-	drawn_to_hand = function(self)
+	drawn_to_hand = function(_)
 		G.GAME.current_round.the_clock.paused = false
         G.GAME.current_round.the_clock.hand_is_being_played = false
 	end,
-	disabled = function(self)
+	disabled = function(_)
 		G.GAME.current_round.the_clock.remaining_time = AST.BLIND.THE_CLOCK.TIMER_SECONDS
 		G.GAME.current_round.the_clock.paused = true
 	end,
-	defeat = function(self)
+	defeat = function(_)
 		G.GAME.current_round.the_clock.remaining_time = AST.BLIND.THE_CLOCK.TIMER_SECONDS
 		G.GAME.current_round.the_clock.paused = true
 	end
@@ -52,9 +58,10 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_RAZOR.REWARD,
 	mult = AST.BLIND.THE_RAZOR.BASE_MULT,
 	boss = { min = AST.BLIND.THE_RAZOR.BOSS_MIN, max = AST.BLIND.THE_RAZOR.BOSS_MAX },
-	card_scored = function(self, card)
+	card_scored = function(_, card)
 		local suit_prefix = string.sub(card.base.suit, 1, 1)..'_'
 		local rank_suffix = card.base.id == 2 and 14 or math.min(card.base.id - 1, 14)
+
 		if rank_suffix < 10 then rank_suffix = tostring(rank_suffix)
 		elseif rank_suffix == 10 then rank_suffix = 'T'
 		elseif rank_suffix == 11 then rank_suffix = 'J'
@@ -82,57 +89,30 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_INSECURITY.REWARD,
 	mult = AST.BLIND.THE_INSECURITY.BASE_MULT,
 	boss = { min = AST.BLIND.THE_INSECURITY.BOSS_MIN, max = AST.BLIND.THE_INSECURITY.BOSS_MAX },
-	recalc_debuff = function(self, card, from_blind) 
-		if G.GAME.current_round.last_purchased_joker ~= 0 then
-			local joker = nil
-			for _, v in ipairs(G.jokers.cards) do
-				if v.unique_val == G.GAME.current_round.last_purchased_joker then
-					joker = v
-					break
-				end
-			end
-
+	recalc_debuff = function(_, _, _)
+		if G.GAME.current_round.last_obtained_joker_unique_val ~= 0 then
+			local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
 			if joker then
 				joker:set_debuff(true)
 				joker:juice_up()
-			else
-				print("something is wrong")
 			end
 		end
 	end,
-	disabled = function(self) 
-		if G.GAME.current_round.last_purchased_joker ~= 0 then
-			local joker = nil
-			for _, v in ipairs(G.jokers.cards) do
-				if v.unique_val == G.GAME.current_round.last_purchased_joker then
-					joker = v
-					break
-				end
-			end
-
+	disabled = function(_)
+		if G.GAME.current_round.last_obtained_joker_unique_val ~= 0 then
+			local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
 			if joker then
 				joker:set_debuff(false)
 				joker:juice_up()
-			else
-				print("something is wrong")
 			end
 		end
 	end,
-	defeat = function(self) 
-		if G.GAME.current_round.last_purchased_joker ~= 0 then
-			local joker = nil
-			for _, v in ipairs(G.jokers.cards) do
-				if v.unique_val == G.GAME.current_round.last_purchased_joker then
-					joker = v
-					break
-				end
-			end
-
+	defeat = function(_)
+		if G.GAME.current_round.last_obtained_joker_unique_val ~= 0 then
+			local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
 			if joker then
 				joker:set_debuff(false)
 				joker:juice_up()
-			else
-				print("something is wrong")
 			end
 		end
 	end
@@ -170,7 +150,7 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_PIT.REWARD,
 	mult = AST.BLIND.THE_PIT.BASE_MULT,
 	boss = { min = AST.BLIND.THE_PIT.BOSS_MIN, max = AST.BLIND.THE_PIT.BOSS_MAX },
-	card_scored = function(self, card)
+	card_scored = function(_, card)
 		if card:get_id() == 2 or card:get_id() == 3 or card:get_id() == 4 or card:get_id() == 5 then
 			G.E_MANAGER:add_event(Event({trigger = 'after', blocking = false, delay = 0.1, func = function()
 				card:juice_up(0.3, 0.5)
@@ -193,12 +173,12 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_CONSTRUCT.REWARD,
 	mult = AST.BLIND.THE_CONSTRUCT.BASE_MULT,
 	boss = { min = AST.BLIND.THE_CONSTRUCT.BOSS_MIN, max = AST.BLIND.THE_CONSTRUCT.BOSS_MAX },
-	recalc_debuff = function(self, card, from_blind) 
+	recalc_debuff = function(_, card, _)
 		return card.area ~= G.jokers and AST.is_prime(card.base.nominal)
 	end
 }
 
--- Hooking to Game.init_game_object to register The Clock related variables
+-- Hooking to Game.init_game_object to register extra data for the boss blinds
 local igo = Game.init_game_object
 function Game:init_game_object()
 	local ret = igo()
@@ -209,33 +189,40 @@ function Game:init_game_object()
 		timer_text = '0:00',
 		hand_is_being_played = false
 	}
-	ret.current_round.last_purchased_joker = 0
+	ret.current_round.last_obtained_joker_unique_val = 0
 	return ret
 end
 
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- The Insecurity hooks and extra functions
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Hooking into Card.add_to_deck to get the unique id of most recently obtained joker for The Insecurity boss blind
 local add_to_deck_old = Card.add_to_deck
 function Card:add_to_deck(from_debuff)
 	local ret = add_to_deck_old(self, from_debuff)
 
 	if not from_debuff and self.ability.set == 'Joker' then
-		G.GAME.current_round.last_purchased_joker = self.unique_val
+		G.GAME.current_round.last_obtained_joker_unique_val = self.unique_val
 	end
 
 	return ret
 end
 
+-- Hooking into Card.remove_from_deck to set last_obtained_joker_unique_val back to 0 when it's removed from the deck
 local remove_from_deck_old = Card.remove_from_deck
 function Card:remove_from_deck(from_debuff)
 	local ret = remove_from_deck_old(self, from_debuff)
 
-	if not from_debuff and G.GAME.current_round.last_purchased_joker == self.unique_val and self.ability.set == 'Joker' then
-		G.GAME.current_round.last_purchased_joker = 0
+	if not from_debuff and G.GAME.current_round.last_obtained_joker_unique_val == self.unique_val and self.ability.set == 'Joker' then
+		G.GAME.current_round.last_obtained_joker_unique_val = 0
 	end
 
 	return ret
 end
 
-
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- The Clock hooks and extra functions
+------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Callback for updating timer text for DynaText UI object
 G.FUNCS.ui_set_timer_text = function(e)
 	local new_timer_text = "0:0"..math.max((math.floor(G.GAME.current_round.the_clock.remaining_time * 100) / 100), 0)
@@ -251,12 +238,12 @@ local function create_timer_ui_box()
 		definition = {n=G.UIT.ROOT, config = {align = 'cm', colour = G.C.CLEAR, padding = 0.2}, nodes={
 			{n=G.UIT.R, config = {align = 'cm', maxw = 1}, nodes={
 				{n=G.UIT.O, config={
-                    func = "ui_set_timer_text", 
-                    object = DynaText({scale = 0.7, string = {{ref_table = G.GAME.current_round.the_clock, ref_value = "timer_text"}}, 
+                    func = "ui_set_timer_text",
+                    object = DynaText({scale = 0.7, string = {{ref_table = G.GAME.current_round.the_clock, ref_value = "timer_text"}},
                     maxw = 9, colours = {G.C.WHITE}, float = true, shadow = true, silent = true, pop_in = 0, pop_in_rate = 6})
                 }},
 			}}
-		}}, 
+		}},
 		config = {
 			align = 'cm',
 			offset ={x=0,y=-3.1},
@@ -295,7 +282,7 @@ local function play_random_hand()
     end}))
 end
 
--- Hooking to Game:update to difine additional logic for The Clock Boss Blind
+-- Hooking to Game:update to define additional logic for The Clock Boss Blind
 local g_update_func = Game.update
 function Game:update(dt)
 	g_update_func(self, dt)
