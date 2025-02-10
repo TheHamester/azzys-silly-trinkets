@@ -4,7 +4,7 @@ Azzy's Silly Trinkets (AST) is a Balatro modification which adds silly miscallae
 
 ## Changelog
 
-### Update 1.0
+### Update 1.0.0
 * Added 6 new boss blinds:
     * The Clock
     * The Razor
