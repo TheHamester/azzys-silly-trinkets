@@ -40,7 +40,7 @@ AST = {
             KEY = "bl_ast_the_insecurity",
             COLOR =  HEX("702A69"),
             REWARD = 5,
-            BASE_MULT = 1.5,
+            BASE_MULT = 2,
             BOSS_MIN = 2,
             BOSS_MAX = 10
         },
