@@ -17,7 +17,7 @@ AST = {
             COLOR =  HEX("006060"),
             REWARD = 7,
             BASE_MULT = 1,
-            BOSS_MIN = 1,
+            BOSS_MIN = 2,
             BOSS_MAX = 10,
     
             TIMER_SECONDS = 8
@@ -30,7 +30,7 @@ AST = {
             COLOR =  HEX("FFAAAA"),
             REWARD = 5,
             BASE_MULT = 2,
-            BOSS_MIN = 1,
+            BOSS_MIN = 2,
             BOSS_MAX = 10
         },
         
@@ -41,7 +41,7 @@ AST = {
             COLOR =  HEX("702A69"),
             REWARD = 5,
             BASE_MULT = 1.5,
-            BOSS_MIN = 1,
+            BOSS_MIN = 2,
             BOSS_MAX = 10
         },
         
@@ -52,7 +52,7 @@ AST = {
             COLOR =  HEX("353535"),
             REWARD = 5,
             BASE_MULT = 2,
-            BOSS_MIN = 1,
+            BOSS_MIN = 2,
             BOSS_MAX = 10
         },
         
@@ -63,7 +63,7 @@ AST = {
             COLOR =  HEX("202956"),
             REWARD = 5,
             BASE_MULT = 2,
-            BOSS_MIN = 1,
+            BOSS_MIN = 2,
             BOSS_MAX = 10
         },
         
@@ -74,7 +74,7 @@ AST = {
             COLOR =  HEX("005500"),
             REWARD = 5,
             BASE_MULT = 1.5,
-            BOSS_MIN = 1,
+            BOSS_MIN = 2,
             BOSS_MAX = 10
         }
     }
