@@ -16,7 +16,7 @@ return {
 			bl_ast_the_insecurity = {
 				name = "The Insecurity",
 				text = {
-					 "Disabled most recently purchased Joker"
+					 "Disables most recently obtained Joker"
 				 }
 			},
 			bl_ast_the_gambit = {

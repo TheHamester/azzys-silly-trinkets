@@ -82,22 +82,58 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_INSECURITY.REWARD,
 	mult = AST.BLIND.THE_INSECURITY.BASE_MULT,
 	boss = { min = AST.BLIND.THE_INSECURITY.BOSS_MIN, max = AST.BLIND.THE_INSECURITY.BOSS_MAX },
-	recalc_debuff = function(self, card, from_blin) 
-		if G.GAME.current_round.last_purchased_joker then
-			G.GAME.current_round.last_purchased_joker:set_debuff(true)
-			G.GAME.current_round.last_purchased_joker:juice_up()
+	recalc_debuff = function(self, card, from_blind) 
+		if G.GAME.current_round.last_purchased_joker ~= 0 then
+			local joker = nil
+			for _, v in ipairs(G.jokers.cards) do
+				if v.unique_val == G.GAME.current_round.last_purchased_joker then
+					joker = v
+					break
+				end
+			end
+
+			if joker then
+				joker:set_debuff(true)
+				joker:juice_up()
+			else
+				print("something is wrong")
+			end
 		end
 	end,
 	disabled = function(self) 
-		if G.GAME.current_round.last_purchased_joker then
-			G.GAME.current_round.last_purchased_joker:set_debuff(false)
-			G.GAME.current_round.last_purchased_joker:juice_up()
+		if G.GAME.current_round.last_purchased_joker ~= 0 then
+			local joker = nil
+			for _, v in ipairs(G.jokers.cards) do
+				if v.unique_val == G.GAME.current_round.last_purchased_joker then
+					joker = v
+					break
+				end
+			end
+
+			if joker then
+				joker:set_debuff(false)
+				joker:juice_up()
+			else
+				print("something is wrong")
+			end
 		end
 	end,
 	defeat = function(self) 
-		if G.GAME.current_round.last_purchased_joker then
-			G.GAME.current_round.last_purchased_joker:set_debuff(false)
-			G.GAME.current_round.last_purchased_joker:juice_up()
+		if G.GAME.current_round.last_purchased_joker ~= 0 then
+			local joker = nil
+			for _, v in ipairs(G.jokers.cards) do
+				if v.unique_val == G.GAME.current_round.last_purchased_joker then
+					joker = v
+					break
+				end
+			end
+
+			if joker then
+				joker:set_debuff(false)
+				joker:juice_up()
+			else
+				print("something is wrong")
+			end
 		end
 	end
 }
@@ -173,28 +209,27 @@ function Game:init_game_object()
 		timer_text = '0:00',
 		hand_is_being_played = false
 	}
-	ret.current_round.last_purchased_joker = nil
+	ret.current_round.last_purchased_joker = 0
 	return ret
 end
 
-local buy_from_shop_old = G.FUNCS.buy_from_shop
-G.FUNCS.buy_from_shop = function(e)
-	local ret = buy_from_shop_old(e)
+local add_to_deck_old = Card.add_to_deck
+function Card:add_to_deck(from_debuff)
+	local ret = add_to_deck_old(self, from_debuff)
 
-	local c1 = e.config.ref_table
-	if c1:is(Card) and c1.ability.set == 'Joker' then
-		G.GAME.current_round.last_purchased_joker = c1
+	if not from_debuff and self.ability.set == 'Joker' then
+		G.GAME.current_round.last_purchased_joker = self.unique_val
 	end
 
 	return ret
 end
 
-local sell_card_old = Card.sell_card
-function Card:sell_card()
-	local ret = sell_card_old(self)
+local remove_from_deck_old = Card.remove_from_deck
+function Card:remove_from_deck(from_debuff)
+	local ret = remove_from_deck_old(self, from_debuff)
 
-	if G.GAME.current_round.last_purchased_joker == self then
-		G.GAME.current_round.last_purchased_joker = nil
+	if not from_debuff and G.GAME.current_round.last_purchased_joker == self.unique_val and self.ability.set == 'Joker' then
+		G.GAME.current_round.last_purchased_joker = 0
 	end
 
 	return ret
@@ -266,7 +301,9 @@ function Game:update(dt)
 	g_update_func(self, dt)
 
 	if G.GAME.blind and G.GAME.blind.name == "bl_ast_the_clock" and not G.GAME.blind.disabled then
-		if not G.GAME.current_round.the_clock.timer_ui_text then
+		-- Turns out the whole game object is being saved when you quit out of the game (asterisk). some objects, for some reason, during reading
+		-- from the file, are being replaced by the string [["]].."MANUAL_REPLACE"..[["]], this is such a weird way to go around the bug(?)..
+		if not G.GAME.current_round.the_clock.timer_ui_text or G.GAME.current_round.the_clock.timer_ui_text == [["]].."MANUAL_REPLACE"..[["]] then
 			G.GAME.current_round.the_clock.timer_ui_text = create_timer_ui_box()
 		end
 
