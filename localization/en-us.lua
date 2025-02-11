@@ -36,7 +36,15 @@ return {
 			bl_ast_the_construct = {
 				name = "The Construct",
 				text = {
-					 "All prime valued cards are debuffed"
+					 "All prime valued cards",
+					 "are debuffed"
+				 }
+			},
+			bl_ast_the_prosopagnosia = {
+				name = "The Prosopagnosia",
+				text = {
+					 "No card is considered",
+					 "a face card"
 				 }
 			}
 		}

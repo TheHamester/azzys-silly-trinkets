@@ -305,7 +305,6 @@ SMODS.Blind {
 -- The Pit
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
 -- Registering
 SMODS.Blind {
 	key = AST.BLIND.THE_PIT.NAME,
@@ -336,7 +335,6 @@ SMODS.Blind {
 -- The Construct
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
 -- Registering
 SMODS.Blind {
 	key = AST.BLIND.THE_CONSTRUCT.NAME,
@@ -350,6 +348,27 @@ SMODS.Blind {
 		return card.area ~= G.jokers and AST.is_prime(card.base.nominal)
 	end
 }
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- The Prosopagnosia
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Registering
+SMODS.Blind {
+	key = AST.BLIND.THE_PROSOPAGNOSIA.NAME,
+	atlas = AST.BLIND.ATLAS,
+	pos = { x = 0, y = AST.BLIND.THE_PROSOPAGNOSIA.ATLAS_ROW },
+	boss_colour = AST.BLIND.THE_PROSOPAGNOSIA.COLOR,
+	dollars = AST.BLIND.THE_PROSOPAGNOSIA.REWARD,
+	mult = AST.BLIND.THE_PROSOPAGNOSIA.BASE_MULT,
+	boss = { min = AST.BLIND.THE_PROSOPAGNOSIA.BOSS_MIN, max = AST.BLIND.THE_PROSOPAGNOSIA.BOSS_MAX }
+}
+
+local is_face_old = Card.is_face
+function Card:is_face()
+	local ret = is_face_old(self)
+	return ret and not (G.GAME.blind.name == AST.BLIND.THE_PROSOPAGNOSIA.KEY and not G.GAME.blind.disabled)
+end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- blind.lua End

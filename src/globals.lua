@@ -27,9 +27,9 @@ AST = {
             NAME = "the_clock",
             KEY = "bl_ast_the_clock",
             COLOR =  HEX("006060"),
-            REWARD = 7,
+            REWARD = 5,
             BASE_MULT = 1.5,
-            BOSS_MIN = 1,
+            BOSS_MIN = 2,
             BOSS_MAX = 10,
 
             TIMER_SECONDS = 8
@@ -87,6 +87,17 @@ AST = {
             REWARD = 5,
             BASE_MULT = 1.5,
             BOSS_MIN = 2,
+            BOSS_MAX = 10
+        },
+
+        THE_PROSOPAGNOSIA = {
+            ATLAS_ROW = 6,
+            NAME = "the_prosopagnosia",
+            KEY = "bl_ast_the_prosopagnosia",
+            COLOR =  HEX("A56126"),
+            REWARD = 5,
+            BASE_MULT = 2,
+            BOSS_MIN = 4,
             BOSS_MAX = 10
         }
     }

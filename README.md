@@ -1,6 +1,6 @@
 # Azzy's Silly Trinkets
 
-Azzy's Silly Trinkets (AST) is a Balatro modification which adds silly miscallaeneous content to the game. Mostly serves as a playground for me to experiment and get more acquainted with Balatro modding. Can't guarantee the content is balanced or won't crash your game, but I try my best to keep it robust!
+**Azzy's Silly Trinkets** (AST) is a Balatro modification which adds silly miscallaeneous content to the game. Mostly serves as a playground for me to experiment and get more acquainted with Balatro modding. Can't guarantee the content is balanced or won't crash your game, but I try my best to keep it robust!
 
 ## Installation
 
@@ -11,18 +11,21 @@ Azzy's Silly Trinkets (AST) is a Balatro modification which adds silly miscallae
 
 ## Changelog
 
-### Update 1.0.2
+### Update 1.1.0
+* Added **The Prosopagnosia** boss blind
+
+### Patch 1.0.2
 * Improved visuals on The Razor boss blind
 
-### Update 1.0.1
-* Improved The Insecurity
-* Fixed issues relating to The Insecurity and The Clock not properly storing some data about them when reloading the saved game (cursed).
+### Patch 1.0.1
+* Improved **The Insecurity** boss blind
+* Fixed issues relating to **The Insecurity** and **The Clock** not properly storing some data about them when reloading the saved game (cursed).
 
 ### Update 1.0.0
 * Added 6 new boss blinds:
-    * The Clock
-    * The Razor
-    * The Insecurity
-    * The Gambit
-    * The Pit
-    * The Construct
+    * **The Clock**
+    * **The Razor**
+    * **The Insecurity**
+    * **The Gambit**
+    * **The Pit**
+    * **The Construct**
