@@ -8,7 +8,7 @@
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
--- Registering Atlas
+-- # Registering Atlas #
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 SMODS.Atlas {
 	key = AST.BLIND.ATLAS,
@@ -20,8 +20,30 @@ SMODS.Atlas {
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
--- Registering modded boss blinds
+-- # Registering modded boss blinds #
 ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Common Hooks
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Hooking to Game.init_game_object to register extra data for the boss blinds
+local igo = Game.init_game_object
+function Game:init_game_object()
+	local ret = igo()
+
+	ret.current_round.the_clock = {
+		remaining_time = 0,
+		paused = true,
+		timer_ui_text = nil,
+		timer_text = '0:00',
+		hand_is_being_played = false
+	}
+
+	ret.current_round.last_obtained_joker_unique_val = 0
+
+	return ret
+end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- The Clock
@@ -47,7 +69,7 @@ SMODS.Blind {
 	end,
 	drawn_to_hand = function(_)
 		G.GAME.current_round.the_clock.paused = false
-        G.GAME.current_round.the_clock.hand_is_being_played = false
+		G.GAME.current_round.the_clock.hand_is_being_played = false
 	end,
 	disabled = function(_)
 		G.GAME.current_round.the_clock.remaining_time = AST.BLIND.THE_CLOCK.TIMER_SECONDS
@@ -71,18 +93,18 @@ end
 -- Function for creating UIBox for displaying timer
 local function create_timer_ui_box()
 	return UIBox{
-		definition = {n=G.UIT.ROOT, config = {align = 'cm', colour = G.C.CLEAR, padding = 0.2}, nodes={
-			{n=G.UIT.R, config = {align = 'cm', maxw = 1}, nodes={
-				{n=G.UIT.O, config={
-                    func = "ui_set_timer_text",
-                    object = DynaText({scale = 0.7, string = {{ref_table = G.GAME.current_round.the_clock, ref_value = "timer_text"}},
-                    maxw = 9, colours = {G.C.WHITE}, float = true, shadow = true, silent = true, pop_in = 0, pop_in_rate = 6})
-                }},
+		definition = {  n= G.UIT.ROOT, config = {align = 'cm', colour = G.C.CLEAR, padding = 0.2}, nodes={
+			{ n = G.UIT.R, config = {align = 'cm', maxw = 1}, nodes= {
+				{n = G.UIT.O, config={
+					func = "ui_set_timer_text",
+					object = DynaText({scale = 0.7, string = {{ref_table = G.GAME.current_round.the_clock, ref_value = "timer_text"}},
+					maxw = 9, colours = {G.C.WHITE}, float = true, shadow = true, silent = true, pop_in = 0, pop_in_rate = 6})
+				}},
 			}}
 		}},
 		config = {
 			align = 'cm',
-			offset ={x=0,y=-3.1},
+			offset ={x=0,y=-1},
 			major = G.play
 		}
 	}
@@ -90,32 +112,26 @@ end
 
 -- Functio for playing up to 5 random cards, including already selected cards
 local function play_random_hand()
-    G.E_MANAGER:add_event(Event({ func = function()
-        local _cards = {}
-        for _, v in ipairs(G.hand.cards) do
-            if not v.highlighted then
-                _cards[#_cards+1] = v
-            end
-        end
+	G.E_MANAGER:add_event(Event({ func = function()
+		local _cards = {}
+		local _highlighted = 0
+		for _, v in ipairs(G.hand.cards) do
+			if not v.highlighted then
+				_cards[#_cards+1] = v
+			else 
+				_highlighted = _highlighted + 1
+			end
+		end
 
-        local _highlighted = {}
-        for _, v in ipairs(G.hand.highlighted) do
-            _highlighted[#_highlighted+1] = v
-        end
+		for _=1,math.min(#_cards, 5 - _highlighted) do
+			local card, card_key = pseudorandom_element(_cards, pseudoseed(AST.BLIND.THE_CLOCK.KEY))
+			table.remove(_cards, card_key)
+			G.hand:add_to_highlighted(card, true)
+		end
 
-        G.hand:unhighlight_all()
-        for _, v in ipairs(_highlighted) do
-            G.hand:add_to_highlighted(v, true)
-        end
-        for _=1,math.min(#_cards, 5 - #_highlighted) do
-            local card, card_key = pseudorandom_element(_cards, pseudoseed("the_clock"))
-            table.remove(_cards, card_key)
-            G.hand:add_to_highlighted(card, true)
-        end
-
-        G.FUNCS.play_cards_from_highlighted(nil)
-        return true
-    end}))
+		G.FUNCS.play_cards_from_highlighted(nil)
+		return true
+	end}))
 end
 
 -- Hooking to Game:update to define additional logic for The Clock Boss Blind
@@ -137,7 +153,7 @@ function Game:update(dt)
 		if G.GAME.current_round.the_clock.remaining_time <= 0 then
 			if not G.GAME.current_round.the_clock.hand_is_being_played then
 				G.GAME.current_round.the_clock.hand_is_being_played = true
-                play_random_hand()
+				play_random_hand()
 			end
 		end
 	else
@@ -165,7 +181,7 @@ SMODS.Blind {
 	-- Extra function, added via a lovely patch, which runs for each scored card
 	card_scored = function(_, card)
 		local suit_prefix = string.sub(card.base.suit, 1, 1)..'_'
-		local rank_suffix = card.base.id == 2 and 14 or math.min(card.base.id - 1, 14)
+		local rank_suffix = card.base.id == 2 and 14 or math.max(card.base.id - 1, 2)
 
 		if rank_suffix < 10 then rank_suffix = tostring(rank_suffix)
 		elseif rank_suffix == 10 then rank_suffix = 'T'
@@ -174,13 +190,18 @@ SMODS.Blind {
 		elseif rank_suffix == 13 then rank_suffix = 'K'
 		elseif rank_suffix == 14 then rank_suffix = 'A'
 		end
-		G.E_MANAGER:add_event(Event({trigger = 'after', blocking = false, delay = 0.0, func = function()
+
+		-- Setting the nominal before we set the base in the event, ebcasue scoring happens faster than the event triggers
+		if rank_suffix == 'A' then card.base.nominal = 11
+		elseif rank_suffix == 'K' or rank_suffix == 'Q' or rank_suffix == 'J' or rank_suffix == 'T' then card.base.nominal = 10
+		else card.base.nominal = card.base.nominal - 1 end
+		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.1, func = function()
+			card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
 			card:juice_up(0.3, 0.5)
 			return true
-		  end
+		end
 		}))
-		card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
-
+		
 		return true
 	end
 }
@@ -275,7 +296,7 @@ SMODS.Blind {
 				end
 			}))
 			return false
-        end
+		end
 		return true
 	end
 }
@@ -283,6 +304,7 @@ SMODS.Blind {
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- The Pit
 ------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 -- Registering
 SMODS.Blind {
@@ -304,14 +326,16 @@ SMODS.Blind {
 				end
 			}))
 			return false
-        end
+		end
 		return true
 	end
 }
 
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- The Construct
 ------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 -- Registering
 SMODS.Blind {
@@ -326,25 +350,6 @@ SMODS.Blind {
 		return card.area ~= G.jokers and AST.is_prime(card.base.nominal)
 	end
 }
-
-------------------------------------------------------------------------------------------------------------------------------------------------------
--- Common Hooks
-------------------------------------------------------------------------------------------------------------------------------------------------------
-
--- Hooking to Game.init_game_object to register extra data for the boss blinds
-local igo = Game.init_game_object
-function Game:init_game_object()
-	local ret = igo()
-	ret.current_round.the_clock = {
-		remaining_time = 0,
-		paused = true,
-		timer_ui_text = nil,
-		timer_text = '0:00',
-		hand_is_being_played = false
-	}
-	ret.current_round.last_obtained_joker_unique_val = 0
-	return ret
-end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- blind.lua End

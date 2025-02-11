@@ -12,7 +12,6 @@ assert(SMODS.load_file('src/globals.lua'))()
 assert(SMODS.load_file('src/util.lua'))()
 assert(SMODS.load_file('src/blind.lua'))()
 
-
 -- Registering atlas for mod icon
 SMODS.Atlas {
     key = "modicon",
