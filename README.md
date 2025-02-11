@@ -11,9 +11,6 @@
 
 ## Changelog
 
-### Update 1.1.0
-* Added **The Prosopagnosia** boss blind
-
 ### Patch 1.0.2
 * Improved visuals on The Razor boss blind
 
