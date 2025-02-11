@@ -39,13 +39,6 @@ return {
 					 "All prime valued cards",
 					 "are debuffed"
 				 }
-			},
-			bl_ast_the_prosopagnosia = {
-				name = "The Prosopagnosia",
-				text = {
-					 "No card is considered",
-					 "a face card"
-				 }
 			}
 		}
 	}

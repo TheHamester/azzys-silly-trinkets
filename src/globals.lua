@@ -88,17 +88,6 @@ AST = {
             BASE_MULT = 1.5,
             BOSS_MIN = 2,
             BOSS_MAX = 10
-        },
-
-        THE_PROSOPAGNOSIA = {
-            ATLAS_ROW = 6,
-            NAME = "the_prosopagnosia",
-            KEY = "bl_ast_the_prosopagnosia",
-            COLOR =  HEX("A56126"),
-            REWARD = 5,
-            BASE_MULT = 2,
-            BOSS_MIN = 4,
-            BOSS_MAX = 10
         }
     }
 }
