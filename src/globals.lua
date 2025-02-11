@@ -29,7 +29,7 @@ AST = {
             COLOR =  HEX("006060"),
             REWARD = 7,
             BASE_MULT = 1.5,
-            BOSS_MIN = 2,
+            BOSS_MIN = 1,
             BOSS_MAX = 10,
 
             TIMER_SECONDS = 8

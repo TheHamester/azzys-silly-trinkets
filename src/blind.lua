@@ -104,7 +104,7 @@ local function create_timer_ui_box()
 		}},
 		config = {
 			align = 'cm',
-			offset ={x=0,y=-1},
+			offset ={x=0,y=-2.5},
 			major = G.play
 		}
 	}
