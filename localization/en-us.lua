@@ -39,6 +39,34 @@ return {
 					 "All prime valued cards",
 					 "are debuffed"
 				 }
+			},
+			bl_ast_the_film = {
+				name = "The Film",
+				text = {
+					 "All negative jokers and cards",
+					 "are debuffed"
+				 }
+			},
+			bl_ast_the_pheasant = {
+				name = "The Pheasant",
+				text = {
+					 "All polychrome jokers and cards",
+					 "are debuffed"
+				 }
+			},
+			bl_ast_the_alloy = {
+				name = "The Alloy",
+				text = {
+					 "All holographic jokers and cards",
+					 "are debuffed"
+				 }
+			},
+			bl_ast_the_aluminum = {
+				name = "The Aluminum",
+				text = {
+					 "All foil jokers and cards",
+					 "are debuffed"
+				 }
 			}
 		}
 	}

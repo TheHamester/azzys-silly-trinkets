@@ -330,7 +330,6 @@ SMODS.Blind {
 	end
 }
 
-
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- The Construct
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -346,6 +345,106 @@ SMODS.Blind {
 	boss = { min = AST.BLIND.THE_CONSTRUCT.BOSS_MIN, max = AST.BLIND.THE_CONSTRUCT.BOSS_MAX },
 	recalc_debuff = function(_, card, _)
 		return card.area ~= G.jokers and AST.is_prime(card.base.nominal)
+	end
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- The Film
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Registering
+SMODS.Blind {
+	key = AST.BLIND.THE_FILM.NAME,
+	atlas = AST.BLIND.ATLAS,
+	pos = { x = 0, y = AST.BLIND.THE_FILM.ATLAS_ROW },
+	boss_colour = AST.BLIND.THE_FILM.COLOR,
+	dollars = AST.BLIND.THE_FILM.REWARD,
+	mult = AST.BLIND.THE_FILM.BASE_MULT,
+	boss = { min = AST.BLIND.THE_FILM.BOSS_MIN, max = AST.BLIND.THE_FILM.BOSS_MAX },
+	recalc_debuff = function(_, card, _)
+		local should_debuff = card.edition and card.edition.negative
+
+		if card.area == G.jokers and should_debuff then
+			card:juice_up()
+			return true
+		end
+
+		return should_debuff
+	end
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- The Phaesant
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Registering
+SMODS.Blind {
+	key = AST.BLIND.THE_PHEASANT.NAME,
+	atlas = AST.BLIND.ATLAS,
+	pos = { x = 0, y = AST.BLIND.THE_PHEASANT.ATLAS_ROW },
+	boss_colour = AST.BLIND.THE_PHEASANT.COLOR,
+	dollars = AST.BLIND.THE_PHEASANT.REWARD,
+	mult = AST.BLIND.THE_PHEASANT.BASE_MULT,
+	boss = { min = AST.BLIND.THE_PHEASANT.BOSS_MIN, max = AST.BLIND.THE_PHEASANT.BOSS_MAX },
+	recalc_debuff = function(_, card, _)
+		local should_debuff = card.edition and card.edition.polychrome
+
+		if card.area == G.jokers and should_debuff then
+			card:juice_up()
+			return true
+		end
+
+		return should_debuff
+	end
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- The Alloy
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Registering
+SMODS.Blind {
+	key = AST.BLIND.THE_ALLOY.NAME,
+	atlas = AST.BLIND.ATLAS,
+	pos = { x = 0, y = AST.BLIND.THE_ALLOY.ATLAS_ROW },
+	boss_colour = AST.BLIND.THE_ALLOY.COLOR,
+	dollars = AST.BLIND.THE_ALLOY.REWARD,
+	mult = AST.BLIND.THE_ALLOY.BASE_MULT,
+	boss = { min = AST.BLIND.THE_ALLOY.BOSS_MIN, max = AST.BLIND.THE_ALLOY.BOSS_MAX },
+	recalc_debuff = function(_, card, _)
+		local should_debuff = card.edition and card.edition.holo
+
+		if card.area == G.jokers and should_debuff then
+			card:juice_up()
+			return true
+		end
+
+		return should_debuff
+	end
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- The Aluminum
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Registering
+SMODS.Blind {
+	key = AST.BLIND.THE_ALUMINUM.NAME,
+	atlas = AST.BLIND.ATLAS,
+	pos = { x = 0, y = AST.BLIND.THE_ALUMINUM.ATLAS_ROW },
+	boss_colour = AST.BLIND.THE_ALUMINUM.COLOR,
+	dollars = AST.BLIND.THE_ALUMINUM.REWARD,
+	mult = AST.BLIND.THE_ALUMINUM.BASE_MULT,
+	boss = { min = AST.BLIND.THE_ALUMINUM.BOSS_MIN, max = AST.BLIND.THE_ALUMINUM.BOSS_MAX },
+	recalc_debuff = function(_, card, _)
+		local should_debuff = card.edition and card.edition.foil
+
+		if card.area == G.jokers and should_debuff then
+			card:juice_up()
+			return true
+		end
+
+		return should_debuff
 	end
 }
 

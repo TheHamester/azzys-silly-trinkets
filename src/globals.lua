@@ -12,7 +12,7 @@
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 AST = {
     -- For debugging purposes
-	DEBUG_MODE = true,
+	DEBUG_MODE = false,
 
     -- Blinds constants
     BLIND = {
@@ -78,7 +78,6 @@ AST = {
             BOSS_MIN = 2,
             BOSS_MAX = 10
         },
-
         THE_CONSTRUCT = {
             ATLAS_ROW = 5,
             NAME = "the_construct",
@@ -87,6 +86,46 @@ AST = {
             REWARD = 5,
             BASE_MULT = 1.5,
             BOSS_MIN = 2,
+            BOSS_MAX = 10
+        },
+        THE_FILM = {
+            ATLAS_ROW = 6,
+            NAME = "the_film",
+            KEY = "bl_ast_the_film",
+            COLOR =  HEX("111111"),
+            REWARD = 5,
+            BASE_MULT = 2,
+            BOSS_MIN = 4,
+            BOSS_MAX = 10
+        },
+        THE_PHEASANT = {
+            ATLAS_ROW = 7,
+            NAME = "the_pheasant",
+            KEY = "bl_ast_the_pheasant",
+            COLOR =  HEX("FFFFFF"),
+            REWARD = 5,
+            BASE_MULT = 2,
+            BOSS_MIN = 4,
+            BOSS_MAX = 10
+        },
+        THE_ALLOY = {
+            ATLAS_ROW = 8,
+            NAME = "the_alloy",
+            KEY = "bl_ast_the_alloy",
+            COLOR =  HEX("A08C59"),
+            REWARD = 5,
+            BASE_MULT = 2,
+            BOSS_MIN = 4,
+            BOSS_MAX = 10
+        },
+        THE_ALUMINUM = {
+            ATLAS_ROW = 9,
+            NAME = "the_aluminum",
+            KEY = "bl_ast_the_aluminum",
+            COLOR =  HEX("00BC87"),
+            REWARD = 5,
+            BASE_MULT = 2,
+            BOSS_MIN = 4,
             BOSS_MAX = 10
         }
     }
