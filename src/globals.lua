@@ -34,7 +34,7 @@ AST = {
             ATLAS_COL = 0,
             NAME = "reverse_polarity",
             KEY = "j_ast_reverse_polarity",
-            RARITY = 3,
+            RARITY = 2,
             COST = 7
         }
     },

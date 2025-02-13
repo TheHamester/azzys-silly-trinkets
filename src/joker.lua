@@ -16,6 +16,7 @@ SMODS.Atlas { key = AST.JOKER.ATLAS, path = AST.JOKER.ATLAS .. ".png", px = AST.
 -- Registering Sounds
 SMODS.Sound { key = AST.SOUND.REVERSE_POLARITY_EXPLODE.NAME, path = AST.SOUND.REVERSE_POLARITY_EXPLODE.PATH }
 
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- # Registering modded boss blinds #
 ------------------------------------------------------------------------------------------------------------------------------------------------------
