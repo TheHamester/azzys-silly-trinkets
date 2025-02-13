@@ -1,5 +1,17 @@
 return {
 	descriptions = {
+		Joker = {
+			j_ast_reverse_polarity = {
+				name = "Reverse Polarity",
+				text = {
+					"Swaps {C:mult}Mult{} and {C:chips}Chips{}",
+					"Swapping costs {C:attention}1{} energy",
+					"Gain {C:chips}#2#{} energy when a Tarot card is sold",
+					"Self destructs when energy reaches {C:chips}0{}",
+					"{C:inactive}Crrently:{} {C:chips}#1#{} {C:inactive}energy {}"
+				}
+			}
+		},
 		Blind = {
 			bl_ast_the_clock = {
 				name = "The Clock",
@@ -23,7 +35,7 @@ return {
 				name = "The Gambit",
 				text = {
 					 "Scoring a face card",
-					 "sets money to {C:money}0{}"
+					 "sets money to {C:money}$0{}"
 				 }
 			},
 			bl_ast_the_pit = {
@@ -68,6 +80,15 @@ return {
 					 "are debuffed"
 				 }
 			}
+		}
+	},
+	misc = {
+		v_dictionary={
+			b_ast_add_energy = "#1# Energy",
+		},
+		dictionary={
+			b_ast_reversed = "Reversed",
+			b_ast_exploded = "Exploded"
 		}
 	}
 }

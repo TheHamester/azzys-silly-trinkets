@@ -14,6 +14,31 @@ AST = {
     -- For debugging purposes
 	DEBUG_MODE = false,
 
+    -- Sounds
+    SOUND = {
+        REVERSE_POLARITY_EXPLODE = {
+            NAME = "reverse_polarity_explode",
+            KEY = "ast_reverse_polarity_explode",
+            PATH = "reverse_polarity_explode.ogg"
+        }
+    },
+
+    -- Jokers constants
+    JOKER = {
+        ATLAS = "AST_JOKER",
+        ATLAS_WIDTH = 71,
+        ATLAS_HEIGHT = 95,
+
+        REVERSE_POLARITY = {
+            ATLAS_ROW = 0,
+            ATLAS_COL = 0,
+            NAME = "reverse_polarity",
+            KEY = "j_ast_reverse_polarity",
+            RARITY = 3,
+            COST = 7
+        }
+    },
+
     -- Blinds constants
     BLIND = {
         ATLAS = "AST_BLIND",

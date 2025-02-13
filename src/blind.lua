@@ -8,15 +8,13 @@
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
--- # Registering Atlas #
+-- # Resources #
 ------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Registering Atlas
 SMODS.Atlas {
-	key = AST.BLIND.ATLAS,
-	path = AST.BLIND.ATLAS .. ".png",
-	atlas_table = AST.BLIND.ATLAS_TABLE,
-	frames = AST.BLIND.ATLAS_FRAMES,
-	px = AST.BLIND.ATLAS_WIDTH,
-	py = AST.BLIND.ATLAS_HEIGHT
+	key = AST.BLIND.ATLAS, path = AST.BLIND.ATLAS .. ".png",
+	atlas_table = AST.BLIND.ATLAS_TABLE, frames = AST.BLIND.ATLAS_FRAMES,
+	px = AST.BLIND.ATLAS_WIDTH, py = AST.BLIND.ATLAS_HEIGHT
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 **Azzy's Silly Trinkets** (AST) is a Balatro modification which adds silly miscallaeneous content to the game. Mostly serves as a playground for me to experiment and get more acquainted with Balatro modding. Can't guarantee the content is balanced or won't crash your game, but I try my best to keep it robust!  
   
-So far this mod only contains 10 new simple boss blinds.
+So far this mod only contains 10 new simple Boss Blinds and 1 Joker.
 
 ## Installation
 
@@ -12,6 +12,9 @@ So far this mod only contains 10 new simple boss blinds.
 4. Enjoy!
 
 ## Changelog
+
+### Update 1.2.0
+* Added a new Joker **Reverse Polarity**
 
 ### Patch 1.1.1
 * The edition disabling boss blinds may only appear when the specific edition is present
