@@ -381,7 +381,7 @@ SMODS.Blind {
 		for _,v in ipairs(G.deck.cards) do
 			if v.edition and v.edition.negative then return true end
 		end
-		print("its false")
+
 		return false
 	end
 }
