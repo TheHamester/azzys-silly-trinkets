@@ -374,11 +374,11 @@ SMODS.Blind {
 	in_pool = function(_)
 		if not G.jokers or not G.deck then return false end
 
-		for _,v in ipairs(G.jokers.cards) do
+		for _, v in ipairs(G.jokers.cards) do
 			if v.edition and v.edition.negative then return true end
 		end
 
-		for _,v in ipairs(G.deck.cards) do
+		for _, v in ipairs(G.deck.cards) do
 			if v.edition and v.edition.negative then return true end
 		end
 
@@ -412,7 +412,7 @@ SMODS.Blind {
 	in_pool = function(_)
 		if not G.jokers or not G.deck then return false end
 
-		for _,v in ipairs(G.jokers.cards) do
+		for _, v in ipairs(G.jokers.cards) do
 			if v.edition and v.edition.polychrome then return true end
 		end
 
@@ -449,11 +449,11 @@ SMODS.Blind {
 	in_pool = function(_)
 		if not G.jokers or not G.deck then return false end
 
-		for _,v in ipairs(G.jokers.cards) do
+		for _, v in ipairs(G.jokers.cards) do
 			if v.edition and v.edition.holo then return true end
 		end
 
-		for _,v in ipairs(G.deck.cards) do
+		for _, v in ipairs(G.deck.cards) do
 			if v.edition and v.edition.holo then return true end
 		end
 
@@ -487,11 +487,11 @@ SMODS.Blind {
 	in_pool = function(_)
 		if not G.jokers or not G.deck then return false end
 
-		for _,v in ipairs(G.jokers.cards) do
+		for _, v in ipairs(G.jokers.cards) do
 			if v.edition and v.edition.foil then return true end
 		end
 
-		for _,v in ipairs(G.deck.cards) do
+		for _, v in ipairs(G.deck.cards) do
 			if v.edition and v.edition.foil then return true end
 		end
 
