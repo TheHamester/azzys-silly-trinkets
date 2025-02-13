@@ -141,7 +141,7 @@ function Game:update(dt)
 
 	if G.GAME.blind and G.GAME.blind.name == AST.BLIND.THE_CLOCK.KEY and not G.GAME.blind.disabled then
 		-- Turns out the whole game object is being saved when you quit out of the game (asterisk). some objects, for some reason, during reading
-		-- from the file, are being replaced by the string [["]].."MANUAL_REPLACE"..[["]], this is such a weird way to go around the bug(?)..
+		-- from the file, are being replaced by the string "\"MANUAL_REPLACE\"", this is such a weird way to go around the bug (?)..
 		if not G.GAME.current_round.the_clock.timer_ui_text or G.GAME.current_round.the_clock.timer_ui_text == [["]].."MANUAL_REPLACE"..[["]] then
 			G.GAME.current_round.the_clock.timer_ui_text = create_timer_ui_box()
 		end
@@ -370,6 +370,19 @@ SMODS.Blind {
 		end
 
 		return should_debuff
+	end,
+	in_pool = function(_)
+		if not G.jokers or not G.deck then return false end
+
+		for _,v in ipairs(G.jokers.cards) do
+			if v.edition and v.edition.negative then return true end
+		end
+
+		for _,v in ipairs(G.deck.cards) do
+			if v.edition and v.edition.negative then return true end
+		end
+		print("its false")
+		return false
 	end
 }
 
@@ -395,6 +408,18 @@ SMODS.Blind {
 		end
 
 		return should_debuff
+	end,
+	in_pool = function(_)
+		if not G.jokers or not G.deck then return false end
+
+		for _,v in ipairs(G.jokers.cards) do
+			if v.edition and v.edition.polychrome then return true end
+		end
+
+		for _,v in ipairs(G.deck.cards) do
+			if v.edition and v.edition.polychrome then return true end
+		end
+		return false
 	end
 }
 
@@ -420,6 +445,19 @@ SMODS.Blind {
 		end
 
 		return should_debuff
+	end,
+	in_pool = function(_)
+		if not G.jokers or not G.deck then return false end
+
+		for _,v in ipairs(G.jokers.cards) do
+			if v.edition and v.edition.holo then return true end
+		end
+
+		for _,v in ipairs(G.deck.cards) do
+			if v.edition and v.edition.holo then return true end
+		end
+
+		return false
 	end
 }
 
@@ -445,6 +483,19 @@ SMODS.Blind {
 		end
 
 		return should_debuff
+	end,
+	in_pool = function(_)
+		if not G.jokers or not G.deck then return false end
+
+		for _,v in ipairs(G.jokers.cards) do
+			if v.edition and v.edition.foil then return true end
+		end
+
+		for _,v in ipairs(G.deck.cards) do
+			if v.edition and v.edition.foil then return true end
+		end
+
+		return false
 	end
 }
 

@@ -13,6 +13,9 @@ So far this mod only contains 10 new simple boss blinds.
 
 ## Changelog
 
+### Patch 1.1.1
+* The edition disabling boss blinds may only appear when the specific edition is present
+
 ### Update 1.1.0
 * Added 4 new boss blinds:
     * **The Film**
@@ -25,7 +28,7 @@ So far this mod only contains 10 new simple boss blinds.
 
 ### Patch 1.0.1
 * Improved **The Insecurity** boss blind
-* Fixed issues relating to **The Insecurity** and **The Clock** not properly storing some data about them when reloading the saved game (cursed).
+* Fixed issues relating to **The Insecurity** and **The Clock** not properly storing some data about them when reloading the saved game (cursed)
 
 ### Update 1.0.0
 * Added 6 new boss blinds:
