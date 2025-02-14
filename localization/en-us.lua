@@ -8,7 +8,21 @@ return {
 					"Swapping costs {C:attention}1{} energy",
 					"Gain {C:chips}#2#{} energy when a Tarot card is sold",
 					"Self destructs when energy reaches {C:chips}0{}",
-					"{C:inactive}Crrently:{} {C:chips}#1#{} {C:inactive}energy {}"
+					"{C:inactive}Currently:{} {C:chips}#1#{} {C:inactive}energy {}"
+				}
+			},
+			j_ast_cardio = {
+				name = "Cardio",
+				text = {
+					"Discard up to {C:mult}#1#{} more card"
+				}
+			},
+			j_ast_paul = {
+				name = "Paul",
+				text = {
+					"{X:mult,C:white}X#1#{} Mult",
+					"{C:attention}Has{} to be fed a {C:attention}joker{} to",
+					"the {C:attention}right{} at the end of round"
 				}
 			}
 		},
@@ -88,7 +102,9 @@ return {
 		},
 		dictionary={
 			b_ast_reversed = "Reversed",
-			b_ast_exploded = "Exploded"
+			b_ast_exploded = "Exploded",
+			b_ast_yummy = "Yummy!",
+			b_ast_starved = "PAUL HAS STARVED"
 		}
 	}
 }

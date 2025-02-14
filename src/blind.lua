@@ -10,6 +10,7 @@
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- # Resources #
 ------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -- Registering Atlas
 SMODS.Atlas {
 	key = AST.BLIND.ATLAS, path = AST.BLIND.ATLAS .. ".png",
@@ -91,7 +92,7 @@ end
 -- Function for creating UIBox for displaying timer
 local function create_timer_ui_box()
 	return UIBox{
-		definition = {  n= G.UIT.ROOT, config = {align = 'cm', colour = G.C.CLEAR, padding = 0.2}, nodes={
+		definition = { n= G.UIT.ROOT, config = {align = 'cm', colour = G.C.CLEAR, padding = 0.2}, nodes={
 			{ n = G.UIT.R, config = {align = 'cm', maxw = 1}, nodes= {
 				{n = G.UIT.O, config={
 					func = "ui_set_timer_text",

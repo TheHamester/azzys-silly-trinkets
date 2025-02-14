@@ -14,15 +14,6 @@ AST = {
     -- For debugging purposes
 	DEBUG_MODE = false,
 
-    -- Sounds
-    SOUND = {
-        REVERSE_POLARITY_EXPLODE = {
-            NAME = "reverse_polarity_explode",
-            KEY = "ast_reverse_polarity_explode",
-            PATH = "reverse_polarity_explode.ogg"
-        }
-    },
-
     -- Jokers constants
     JOKER = {
         ATLAS = "AST_JOKER",
@@ -36,6 +27,24 @@ AST = {
             KEY = "j_ast_reverse_polarity",
             RARITY = 2,
             COST = 7
+        },
+
+        CARDIO = {
+            ATLAS_ROW = 0,
+            ATLAS_COL = 1,
+            NAME = "cardio",
+            KEY = "j_ast_cardio",
+            RARITY = 2,
+            COST = 6
+        },
+
+        PAUL = {
+            ATLAS_ROW = 0,
+            ATLAS_COL = 2,
+            NAME = "paul",
+            KEY = "j_ast_paul",
+            RARITY = 2,
+            COST = 4
         }
     },
 

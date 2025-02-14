@@ -1,22 +1,31 @@
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Azzy's Silly Trinkets (AST)
 ------------------------------------------------------------------------------------------------------------------------------------------------------
--- main.lua 
--- Entry point to the mod
+-- sound.lua 
+-- Registering sounds
 --
 -- Hamester, 2025
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- Preloading other lua scripts
-assert(SMODS.load_file('src/globals.lua'))()
-assert(SMODS.load_file('src/util.lua'))()
-assert(SMODS.load_file('src/sound.lua'))()
-assert(SMODS.load_file('src/joker.lua'))()
-assert(SMODS.load_file('src/blind.lua'))()
+-- Sound data
+AST.SOUND = {
+    REVERSE_POLARITY_EXPLODE = {
+        NAME = "reverse_polarity_explode",
+        KEY = "ast_reverse_polarity_explode",
+        PATH = "reverse_polarity_explode.ogg"
+    },
+    PAUL_EAT = {
+        NAME = "paul_eat",
+        KEY = "ast_paul_eat",
+        PATH = "paul_eat.ogg"
+    }
+}
 
--- Registering atlas for mod icon
-SMODS.Atlas { key = "modicon", path = "Icon.png", px = 34, py = 34 }
+-- Registering
+for _, v in pairs(AST.SOUND) do
+    SMODS.Sound { key = v.NAME, path = v.PATH }
+end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
--- main.lua End
+-- sound.lua End
 ------------------------------------------------------------------------------------------------------------------------------------------------------
