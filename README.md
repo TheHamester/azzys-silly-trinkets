@@ -14,9 +14,10 @@ So far this mod only contains 10 new simple Boss Blinds and 3 Jokes.
 ## Changelog
 
 ### Update 1.3.0
-* Added 2 new Jokers:
+* Added 3 new Jokers:
     * **Cardio**
     * **Paul**
+    * **Officinaphobia**
 * **Reverse Polarity** is now Uncommon
 * Fixed typos
 

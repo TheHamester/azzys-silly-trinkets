@@ -91,6 +91,7 @@ SMODS.Joker {
     loc_vars = function(_, _, card) return { vars = { card.ability.extra.extra_discards } } end,
     rarity = AST.JOKER.CARDIO.RARITY,
     cost = AST.JOKER.CARDIO.COST,
+    blueprint_compat = false,
     unlocked = true,
     discovered = AST.DEBUG_MODE
 }
@@ -136,6 +137,7 @@ SMODS.Joker {
     loc_vars = function(_, _, card) return { vars = { card.ability.extra.x_mult } } end,
     rarity = AST.JOKER.PAUL.RARITY,
     cost = AST.JOKER.PAUL.COST,
+    blueprint_compat = true,
     unlocked = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
@@ -186,6 +188,62 @@ SMODS.Joker {
         end
     end
 }
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Officinaphobia
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Registering
+SMODS.Joker {
+    key = AST.JOKER.OFFICINAPHOBIA.NAME,
+    atlas = AST.JOKER.ATLAS,
+    pos = { x = AST.JOKER.OFFICINAPHOBIA.ATLAS_COL, y = AST.JOKER.OFFICINAPHOBIA.ATLAS_ROW },
+    config = { extra = { mult = 0, mult_gain = 3 } },
+    loc_vars = function(_, _, card) return { vars = { card.ability.extra.mult, card.ability.extra.mult_gain } } end,
+    rarity = AST.JOKER.OFFICINAPHOBIA.RARITY,
+    cost = AST.JOKER.OFFICINAPHOBIA.COST,
+    unlocked = true,
+    discovered = AST.DEBUG_MODE,
+    blueprint_compat = true,
+    calculate = function(_, card, context)
+        if context.ending_shop and not context.blueprint then
+            if G.GAME.current_round.nothing_was_purchased then
+                card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_gain
+                return { message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult } } }
+            end
+
+            G.GAME.current_round.nothing_was_purchased = true
+            return
+        end
+
+        if context.joker_main and card.ability.extra.mult > 0 then
+            return { 
+                mult_mod = card.ability.extra.mult,
+                message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult } }
+            }
+        end
+    end
+}
+
+-- Hooking to Game.init_game_object to register extra data for Agoraphobia
+local igo = Game.init_game_object
+function Game:init_game_object()
+	local ret = igo()
+
+	ret.current_round.nothing_was_purchased = true
+
+	return ret
+end
+
+-- Hooking to G.FUNCS.buy_from_shop to set ret.current_round.nothing_was_purchased to true
+local buy_from_shop_old = G.FUNCS.buy_from_shop
+G.FUNCS.buy_from_shop = function(e)
+    local ret = buy_from_shop_old(e)
+
+    G.GAME.current_round.nothing_was_purchased = false
+
+    return ret
+end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- joker.lua End

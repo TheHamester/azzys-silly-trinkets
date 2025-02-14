@@ -28,7 +28,6 @@ AST = {
             RARITY = 2,
             COST = 7
         },
-
         CARDIO = {
             ATLAS_ROW = 0,
             ATLAS_COL = 1,
@@ -37,13 +36,20 @@ AST = {
             RARITY = 2,
             COST = 6
         },
-
         PAUL = {
             ATLAS_ROW = 0,
             ATLAS_COL = 2,
             NAME = "paul",
             KEY = "j_ast_paul",
             RARITY = 2,
+            COST = 4
+        },
+        OFFICINAPHOBIA = {
+            ATLAS_ROW = 0,
+            ATLAS_COL = 3,
+            NAME = "officinaphobia",
+            KEY = "j_ast_officinaphobia",
+            RARITY = 1,
             COST = 4
         }
     },

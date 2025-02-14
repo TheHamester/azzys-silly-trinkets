@@ -24,6 +24,13 @@ return {
 					"{C:attention}Has{} to be fed a {C:attention}joker{} to",
 					"the {C:attention}right{} at the end of round"
 				}
+			},
+			j_ast_officinaphobia = {
+				name = "Officinaphobia",
+				text = {
+					"Gains {C:mult}+#2#{} Mult after shop if nothing was purchased",
+					"{C:inactive}Currently:{} {C:mult}+#1#{} {C:inactive}Mult {}"
+				}
 			}
 		},
 		Blind = {
@@ -98,7 +105,7 @@ return {
 	},
 	misc = {
 		v_dictionary={
-			b_ast_add_energy = "#1# Energy",
+			b_ast_add_energy = "#1# Energy"
 		},
 		dictionary={
 			b_ast_reversed = "Reversed",
