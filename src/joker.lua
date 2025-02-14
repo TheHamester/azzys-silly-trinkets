@@ -25,6 +25,7 @@ SMODS.Atlas {
 -- Reverse Polarity
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
+-- Registering
 SMODS.Joker {
     key = AST.JOKER.REVERSE_POLARITY.NAME,
     atlas = AST.JOKER.ATLAS,
@@ -81,6 +82,7 @@ SMODS.Joker {
 -- Cardio
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
+-- Registering
 SMODS.Joker {
     key = AST.JOKER.CARDIO.NAME,
     atlas = AST.JOKER.ATLAS,
@@ -93,6 +95,7 @@ SMODS.Joker {
     discovered = AST.DEBUG_MODE
 }
 
+-- Hook to CardArea.add_to_highlighted to temporarily modify highlighted_limit
 local add_to_highlighted_old = CardArea.add_to_highlighted
 function CardArea:add_to_highlighted(card, silent)
     local cardio = find_joker(AST.JOKER.CARDIO.KEY)
@@ -103,7 +106,7 @@ function CardArea:add_to_highlighted(card, silent)
     self.config.highlighted_limit = old_highlighted_limit
 end
 
--- Hooking into Card.remove_from_deck to deselect extra cards allowed to be selected with Cardio
+-- Hooking into Card.remove_from_deck to deselect extra cards after card is removed from the jokers
 local remove_from_deck_old = Card.remove_from_deck
 function Card:remove_from_deck(from_debuff)
 	local ret = remove_from_deck_old(self, from_debuff)
@@ -124,6 +127,7 @@ end
 -- Paul
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
+-- Registering
 SMODS.Joker {
     key = AST.JOKER.PAUL.NAME,
     atlas = AST.JOKER.ATLAS,
