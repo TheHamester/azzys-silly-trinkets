@@ -18,7 +18,7 @@ SMODS.Atlas {
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
--- # Registering modded boss blinds #
+-- # Registering modded jokers #
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -228,14 +228,14 @@ SMODS.Joker {
 -- Hooking to Game.init_game_object to register extra data for Officinaphobia
 local igo = Game.init_game_object
 function Game:init_game_object()
-	local ret = igo()
+	local ret = igo(self)
 
 	ret.current_round.nothing_was_purchased = true
 
 	return ret
 end
 
--- Hooking to G.FUNCS.buy_from_shop to set ret.current_round.nothing_was_purchased to true
+-- Hooking to G.FUNCS.buy_from_shop to set current_round.nothing_was_purchased to false
 local buy_from_shop_old = G.FUNCS.buy_from_shop
 G.FUNCS.buy_from_shop = function(e)
     local ret = buy_from_shop_old(e)
@@ -243,6 +243,22 @@ G.FUNCS.buy_from_shop = function(e)
     G.GAME.current_round.nothing_was_purchased = false
 
     return ret
+end
+
+-- Hooking into Card.open to set current_round.nothing_was_purchased to false when a pack in the shop is open
+local card_open_old = Card.open
+function Card:open()
+    card_open_old(self)
+
+    G.GAME.current_round.nothing_was_purchased = false
+end
+
+-- Hooking into Card.redeem to set current_round.nothing_was_purchased to false a voucher in the shop is redeemed
+local card_redeem_old = Card.redeem
+function Card:redeem()
+    card_redeem_old(self)
+
+    G.GAME.current_round.nothing_was_purchased = false
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -326,7 +342,7 @@ SMODS.Joker {
 -- Hooking to Game.init_game_object to register extra data for Ejected
 local igo = Game.init_game_object
 function Game:init_game_object()
-	local ret = igo()
+	local ret = igo(self)
 
 	ret.current_round.ejected_most_played_poker_hand = "High Card"
 

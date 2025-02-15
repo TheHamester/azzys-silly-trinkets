@@ -28,7 +28,8 @@ return {
 			j_ast_officinaphobia = {
 				name = "Officinaphobia",
 				text = {
-					"Gains {C:mult}+#2#{} Mult after shop if nothing was purchased",
+					"Gains {C:mult}+#2#{} Mult after shop",
+					"if nothing was purchased",
 					"{C:inactive}Currently:{} {C:mult}+#1#{} {C:inactive}Mult {}"
 				}
 			},

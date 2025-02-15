@@ -13,6 +13,9 @@ So far this mod only contains 10 new Boss Blinds, and 5 Jokes.
 
 ## Changelog
 
+### Patch 1.4.1
+    * Fixed bug when **Officinaphobia** mult gain still triggers after redeeming a voucher or buying a booster pack
+
 ### Update 1.4.0
 * Added 2 new Jokers:
     * **Match 3**

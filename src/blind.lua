@@ -26,24 +26,6 @@ SMODS.Atlas {
 -- Common Hooks
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- Hooking to Game.init_game_object to register extra data for the boss blinds
-local igo = Game.init_game_object
-function Game:init_game_object()
-	local ret = igo()
-
-	ret.current_round.the_clock = {
-		remaining_time = 0,
-		paused = true,
-		timer_ui_text = nil,
-		timer_text = '0:00',
-		hand_is_being_played = false
-	}
-
-	ret.current_round.last_obtained_joker_unique_val = 0
-
-	return ret
-end
-
 -- Hooking into G.FUNCS.evaluate_play to inject the blind's card_scored function if it exists 
 local evaluate_play_old = G.FUNCS.evaluate_play
 G.FUNCS.evaluate_play = function(e)
@@ -102,6 +84,22 @@ SMODS.Blind {
 		G.GAME.current_round.the_clock.paused = true
 	end
 }
+
+-- Hooking to Game.init_game_object to register extra data for The Clock
+local igo = Game.init_game_object
+function Game:init_game_object()
+	local ret = igo()
+
+	ret.current_round.the_clock = {
+		remaining_time = 0,
+		paused = true,
+		timer_ui_text = nil,
+		timer_text = '0:00',
+		hand_is_being_played = false
+	}
+
+	return ret
+end
 
 -- Callback for updating timer text for DynaText UI object
 G.FUNCS.ui_set_timer_text = function(e)
@@ -270,6 +268,16 @@ SMODS.Blind {
 		end
 	end
 }
+
+-- Hooking to Game.init_game_object to register extra data for The Insecurity
+local igo = Game.init_game_object
+function Game:init_game_object()
+	local ret = igo(self)
+
+	ret.current_round.last_obtained_joker_unique_val = 0
+
+	return ret
+end
 
 -- Hooking into Card.add_to_deck to get the unique id of most recently obtained joker for The Insecurity boss blind
 local add_to_deck_old = Card.add_to_deck
