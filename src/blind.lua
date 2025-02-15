@@ -55,8 +55,8 @@ G.FUNCS.evaluate_play = function(e)
 	highlight_card = function(card, percent, dir)
 		highlight_card_old(card, percent, dir)
 
-		if dir == 'up' and type(G.GAME.blind.config.blind.card_scored) == "function" and not G.GAME.blind.disabled and continue_processing_scored_cards then 
-			continue_processing_scored_cards = G.GAME.blind.config.blind:card_scored(card) 
+		if dir == 'up' and type(G.GAME.blind.config.blind.card_scored) == "function" and not G.GAME.blind.disabled and continue_processing_scored_cards then
+			continue_processing_scored_cards = G.GAME.blind.config.blind:card_scored(card)
 		end
 	end
 
@@ -140,7 +140,7 @@ local function play_random_hand()
 		for _, v in ipairs(G.hand.cards) do
 			if not v.highlighted then
 				_cards[#_cards+1] = v
-			else 
+			else
 				_highlighted = _highlighted + 1
 			end
 		end
@@ -224,7 +224,7 @@ SMODS.Blind {
 			return true
 		end
 		}))
-		
+
 		return true
 	end
 }

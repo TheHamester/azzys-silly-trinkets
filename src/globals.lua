@@ -26,7 +26,7 @@ AST = {
             NAME = "reverse_polarity",
             KEY = "j_ast_reverse_polarity",
             RARITY = 2,
-            COST = 7
+            COST = 6
         },
         CARDIO = {
             ATLAS_ROW = 0,
@@ -34,7 +34,7 @@ AST = {
             NAME = "cardio",
             KEY = "j_ast_cardio",
             RARITY = 2,
-            COST = 6
+            COST = 7
         },
         PAUL = {
             ATLAS_ROW = 0,
@@ -51,6 +51,22 @@ AST = {
             KEY = "j_ast_officinaphobia",
             RARITY = 1,
             COST = 4
+        },
+        MATCH_3 = {
+            ATLAS_ROW = 0,
+            ATLAS_COL = 4,
+            NAME = "match_3",
+            KEY = "j_ast_match_3",
+            RARITY = 2,
+            COST = 5
+        },
+        EJECTED = {
+            ATLAS_ROW = 0,
+            ATLAS_COL = 5,
+            NAME = "ejected",
+            KEY = "j_ast_ejected",
+            RARITY = 2,
+            COST = 6
         }
     },
 

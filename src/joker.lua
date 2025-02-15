@@ -225,7 +225,7 @@ SMODS.Joker {
     end
 }
 
--- Hooking to Game.init_game_object to register extra data for Agoraphobia
+-- Hooking to Game.init_game_object to register extra data for Officinaphobia
 local igo = Game.init_game_object
 function Game:init_game_object()
 	local ret = igo()
@@ -243,6 +243,105 @@ G.FUNCS.buy_from_shop = function(e)
     G.GAME.current_round.nothing_was_purchased = false
 
     return ret
+end
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Match 3
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Registering
+SMODS.Joker {
+    key = AST.JOKER.MATCH_3.NAME,
+    atlas = AST.JOKER.ATLAS,
+    pos = { x = AST.JOKER.MATCH_3.ATLAS_COL, y = AST.JOKER.MATCH_3.ATLAS_ROW },
+    config = { extra = { chips = 0, chips_gain = 11 } },
+    loc_vars = function(_, _, card) return { vars = { card.ability.extra.chips, card.ability.extra.chips_gain } } end,
+    rarity = AST.JOKER.MATCH_3.RARITY,
+    cost = AST.JOKER.MATCH_3.COST,
+    unlocked = true,
+    discovered = AST.DEBUG_MODE,
+    blueprint_compat = true,
+    calculate = function(_, card, context)
+        if context.pre_discard and not context.blueprint then
+            local dupes = {}
+            for i, v in ipairs(G.hand.highlighted) do
+                if not dupes[v.base.id] then dupes[v.base.id] = 0 end 
+                dupes[v.base.id] = dupes[v.base.id] + 1
+            end
+            
+            local chips_gain = 0
+            for i, v in pairs(dupes) do
+                if v >= 3 then chips_gain = chips_gain + card.ability.extra.chips_gain * v end
+            end
+            if chips_gain > 0 then
+                card.ability.extra.chips = card.ability.extra.chips + chips_gain
+                return { message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chips } } }
+            end
+        end
+
+        if context.joker_main and card.ability.extra.chips > 0 then
+            return { 
+                chip_mod = card.ability.extra.chips,
+                message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chips } }
+            }
+        end
+    end
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Ejected
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Registering
+SMODS.Joker {
+    key = AST.JOKER.EJECTED.NAME,
+    atlas = AST.JOKER.ATLAS,
+    pos = { x = AST.JOKER.EJECTED.ATLAS_COL, y = AST.JOKER.EJECTED.ATLAS_ROW },
+    config = { extra = {  } },
+    loc_vars = function(_, _, card) return { vars = {  } } end,
+    rarity = AST.JOKER.EJECTED.RARITY,
+    cost = AST.JOKER.EJECTED.COST,
+    unlocked = true,
+    discovered = AST.DEBUG_MODE,
+    blueprint_compat = true,
+    calculate = function(_, card, context)
+        if context.discard then 
+            if G.GAME.current_round.discards_used <= 0 and #context.full_hand == 1 and context.full_hand[1].base.id == 14 then
+                local text = G.GAME.current_round.ejected_most_played_poker_hand
+                card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')})
+                update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(text, 'poker_hands'),chips = G.GAME.hands[text].chips, mult = G.GAME.hands[text].mult, level=G.GAME.hands[text].level})
+                level_up_hand(context.blueprint_card or card, text, nil, 1)
+                update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
+
+                return {
+                    delay = 0.45, 
+                    remove = true,
+                    card = context.full_hand[1]
+                }
+            end
+        end
+    end
+}
+
+-- Hooking to Game.init_game_object to register extra data for Ejected
+local igo = Game.init_game_object
+function Game:init_game_object()
+	local ret = igo()
+
+	ret.current_round.ejected_most_played_poker_hand = "High Card"
+
+	return ret
+end
+
+-- Hooking into evaluate_play to check for most played poker hand being updated
+local evaluate_play_old = G.FUNCS.evaluate_play
+G.FUNCS.evaluate_play = function(e)
+    local text = G.FUNCS.get_poker_hand_info(G.play.cards)
+    evaluate_play_old(e)
+    
+    if G.GAME.hands[text].played >= G.GAME.hands[G.GAME.current_round.ejected_most_played_poker_hand].played then
+        G.GAME.current_round.ejected_most_played_poker_hand = text
+    end
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------

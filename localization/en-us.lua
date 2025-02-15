@@ -31,6 +31,23 @@ return {
 					"Gains {C:mult}+#2#{} Mult after shop if nothing was purchased",
 					"{C:inactive}Currently:{} {C:mult}+#1#{} {C:inactive}Mult {}"
 				}
+			},
+			j_ast_match_3 = {
+				name = "Match 3",
+				text = {
+					"Gains {C:chips}+#2#{} Chips per card if 3 or",
+					"more cards of the {C:attention}same rank{}",
+					"are discarded at the same time",
+					"{C:inactive}Currently:{} {C:chips}+#1#{} {C:inactive}Chips {}"
+				}
+			},
+			j_ast_ejected = {
+				name = "Ejected",
+				text = {
+                    "If {C:attention}first discard{} of round",
+                    "has only a single {C:attention}Ace{}, destroy",
+					"it and upgrade your {C:attention}most played hand{}"
+				}
 			}
 		},
 		Blind = {
