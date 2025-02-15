@@ -44,6 +44,29 @@ function Game:init_game_object()
 	return ret
 end
 
+-- Hooking into G.FUNCS.evaluate_play to inject the blind's card_scored function if it exists 
+local evaluate_play_old = G.FUNCS.evaluate_play
+G.FUNCS.evaluate_play = function(e)
+	local continue_processing_scored_cards = true
+
+	-- Nested hook into highlight_card to temporarily inject function call code during the call of G.FUNCS.evaluate_play
+	-- I'm calling this Scoped Hooking :tm:
+	local highlight_card_old = highlight_card
+	highlight_card = function(card, percent, dir)
+		highlight_card_old(card, percent, dir)
+
+		if dir == 'up' and type(G.GAME.blind.config.blind.card_scored) == "function" and not G.GAME.blind.disabled and continue_processing_scored_cards then 
+			continue_processing_scored_cards = G.GAME.blind.config.blind:card_scored(card) 
+		end
+	end
+
+	-- Calling the original function
+	evaluate_play_old(e)
+
+	-- And don't forget to unhook after
+	highlight_card = highlight_card_old
+end
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- The Clock
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -122,7 +145,7 @@ local function play_random_hand()
 			end
 		end
 
-		for _=1,math.min(#_cards, 5 - _highlighted) do
+		for _ = 1, math.min(#_cards, 5 - _highlighted) do
 			local card, card_key = pseudorandom_element(_cards, pseudoseed(AST.BLIND.THE_CLOCK.KEY))
 			table.remove(_cards, card_key)
 			G.hand:add_to_highlighted(card, true)
@@ -196,6 +219,7 @@ SMODS.Blind {
 		else card.base.nominal = card.base.nominal - 1 end
 		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.1, func = function()
 			card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
+			play_sound('slice1', 0.96+math.random()*0.08)
 			card:juice_up(0.3, 0.5)
 			return true
 		end

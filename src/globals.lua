@@ -74,7 +74,6 @@ AST = {
 
             TIMER_SECONDS = 8
         },
-
         THE_RAZOR = {
             ATLAS_ROW = 1,
             NAME = "the_razor",
@@ -85,7 +84,6 @@ AST = {
             BOSS_MIN = 2,
             BOSS_MAX = 10
         },
-
         THE_INSECURITY = {
             ATLAS_ROW = 2,
             NAME = "the_insecurity",
@@ -96,7 +94,6 @@ AST = {
             BOSS_MIN = 2,
             BOSS_MAX = 10
         },
-
         THE_GAMBIT = {
             ATLAS_ROW = 3,
             NAME = "the_gambit",
@@ -107,7 +104,6 @@ AST = {
             BOSS_MIN = 2,
             BOSS_MAX = 10
         },
-
         THE_PIT = {
             ATLAS_ROW = 4,
             NAME = "the_pit",
