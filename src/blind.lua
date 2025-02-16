@@ -19,35 +19,27 @@ SMODS.Atlas {
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
--- # Registering modded boss blinds #
+-- # Modded Boss Blinds Implementation #
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Common Hooks
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- Hooking into G.FUNCS.evaluate_play to inject the blind's card_scored function if it exists 
-local evaluate_play_old = G.FUNCS.evaluate_play
-G.FUNCS.evaluate_play = function(e)
-	local continue_processing_scored_cards = true
+-- Hooking into G.FUNCS.evaluate_play to inject the blind's card_scored function if it exists
+LuaMixin.Redirect {
+	original_func_namespace = G.FUNCS,
+	original_func_name = "evaluate_play",
+	target_func_name = "highlight_card",
 
-	-- Nested hook into highlight_card to temporarily inject function call code during the call of G.FUNCS.evaluate_play
-	-- I'm calling this Scoped Hooking :tm:
-	local highlight_card_old = highlight_card
-	highlight_card = function(card, percent, dir)
-		highlight_card_old(card, percent, dir)
-
-		if dir == 'up' and type(G.GAME.blind.config.blind.card_scored) == "function" and not G.GAME.blind.disabled and continue_processing_scored_cards then
-			continue_processing_scored_cards = G.GAME.blind.config.blind:card_scored(card)
+	init_context = function() return { continue_processing_scored_cards = true } end,
+	replacement_func = function(context, card, percent, dir)
+		context.target_func_old(card, percent, dir)
+		if dir == 'up' and type(G.GAME.blind.config.blind.card_scored) == "function" and not G.GAME.blind.disabled and context.continue_processing_scored_cards then
+			context.continue_processing_scored_cards = G.GAME.blind.config.blind:card_scored(card)
 		end
 	end
-
-	-- Calling the original function
-	evaluate_play_old(e)
-
-	-- And don't forget to unhook after
-	highlight_card = highlight_card_old
-end
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- The Clock
@@ -86,20 +78,21 @@ SMODS.Blind {
 }
 
 -- Hooking to Game.init_game_object to register extra data for The Clock
-local igo = Game.init_game_object
-function Game:init_game_object()
-	local ret = igo()
+LuaMixin.Inject_Tail {
+	namespace = Game,
+	original_func_name = "init_game_object",
+	injected_code = function(ret, self)
+		ret.current_round.the_clock = {
+			remaining_time = 0,
+			paused = true,
+			timer_ui_text = nil,
+			timer_text = '0:00',
+			hand_is_being_played = false
+		}
 
-	ret.current_round.the_clock = {
-		remaining_time = 0,
-		paused = true,
-		timer_ui_text = nil,
-		timer_text = '0:00',
-		hand_is_being_played = false
-	}
-
-	return ret
-end
+		return ret
+	end 
+}
 
 -- Callback for updating timer text for DynaText UI object
 G.FUNCS.ui_set_timer_text = function(e)
@@ -155,34 +148,35 @@ local function play_random_hand()
 end
 
 -- Hooking to Game:update to define additional logic for The Clock Boss Blind
-local g_update_func = Game.update
-function Game:update(dt)
-	g_update_func(self, dt)
-
-	if G.GAME.blind and G.GAME.blind.name == AST.BLIND.THE_CLOCK.KEY and not G.GAME.blind.disabled then
-		-- Turns out the whole game object is being saved when you quit out of the game (asterisk). some objects, for some reason, during reading
-		-- from the file, are being replaced by the string "\"MANUAL_REPLACE\"", this is such a weird way to go around the bug (?)..
-		if not G.GAME.current_round.the_clock.timer_ui_text or G.GAME.current_round.the_clock.timer_ui_text == [["]].."MANUAL_REPLACE"..[["]] then
-			G.GAME.current_round.the_clock.timer_ui_text = create_timer_ui_box()
-		end
-
-		if not G.GAME.current_round.the_clock.paused and G.STATE == G.STATES.SELECTING_HAND and not G.SETTINGS.paused then
-			G.GAME.current_round.the_clock.remaining_time = G.GAME.current_round.the_clock.remaining_time - dt
-		end
-
-		if G.GAME.current_round.the_clock.remaining_time <= 0 then
-			if not G.GAME.current_round.the_clock.hand_is_being_played then
-				G.GAME.current_round.the_clock.hand_is_being_played = true
-				play_random_hand()
+LuaMixin.Inject_Tail {
+	namespace = Game,
+	original_func_name = "update",
+	injected_code = function(ret, self, dt)
+		if G.GAME.blind and G.GAME.blind.name == AST.BLIND.THE_CLOCK.KEY and not G.GAME.blind.disabled then
+			-- Turns out the whole game object is being saved when you quit out of the game (asterisk). some objects, for some reason, during reading
+			-- from the file, are being replaced by the string "\"MANUAL_REPLACE\"", this is such a weird way to go around the bug (?)..
+			if not G.GAME.current_round.the_clock.timer_ui_text or G.GAME.current_round.the_clock.timer_ui_text == [["]].."MANUAL_REPLACE"..[["]] then
+				G.GAME.current_round.the_clock.timer_ui_text = create_timer_ui_box()
+			end
+	
+			if not G.GAME.current_round.the_clock.paused and G.STATE == G.STATES.SELECTING_HAND and not G.SETTINGS.paused then
+				G.GAME.current_round.the_clock.remaining_time = G.GAME.current_round.the_clock.remaining_time - dt
+			end
+	
+			if G.GAME.current_round.the_clock.remaining_time <= 0 then
+				if not G.GAME.current_round.the_clock.hand_is_being_played then
+					G.GAME.current_round.the_clock.hand_is_being_played = true
+					play_random_hand()
+				end
+			end
+		else
+			if G.GAME.current_round.the_clock.timer_ui_text then
+				G.GAME.current_round.the_clock.timer_ui_text:remove()
+				G.GAME.current_round.the_clock.timer_ui_text = nil
 			end
 		end
-	else
-		if G.GAME.current_round.the_clock.timer_ui_text then
-			G.GAME.current_round.the_clock.timer_ui_text:remove()
-			G.GAME.current_round.the_clock.timer_ui_text = nil
-		end
-	end
-end
+	end 
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- The Razor
@@ -197,9 +191,14 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_RAZOR.REWARD,
 	mult = AST.BLIND.THE_RAZOR.BASE_MULT,
 	boss = { min = AST.BLIND.THE_RAZOR.BOSS_MIN, max = AST.BLIND.THE_RAZOR.BOSS_MAX },
-
-	-- Extra function, added via a lovely patch, which runs for each scored card
 	card_scored = function(_, card)
+		-- Cursed check for when a rank is modded, there's no efficiently knowing what modded rank comes before,
+		-- so for now we don't do anything with them
+		if SMODS.Ranks[card.base.value].lc_atlas ~= "cards_1" or SMODS.Ranks[card.base.value].hc_atlas ~= "cards_2" then
+			return false
+		end
+
+		-- This is vanilla behavior and won't work with modded ranks, strength gets
 		local suit_prefix = string.sub(card.base.suit, 1, 1)..'_'
 		local rank_suffix = card.base.id == 2 and 14 or math.max(card.base.id - 1, 2)
 
@@ -240,68 +239,57 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_INSECURITY.REWARD,
 	mult = AST.BLIND.THE_INSECURITY.BASE_MULT,
 	boss = { min = AST.BLIND.THE_INSECURITY.BOSS_MIN, max = AST.BLIND.THE_INSECURITY.BOSS_MAX },
-	recalc_debuff = function(_, _, _)
-		if G.GAME.current_round.last_obtained_joker_unique_val ~= 0 then
-			local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
-			if joker then
-				joker:set_debuff(true)
-				joker:juice_up()
-			end
+	recalc_debuff = function(_, card, _)
+		local should_debuff = card.unique_val == G.GAME.current_round.last_obtained_joker_unique_val
+		if should_debuff then 
+			card:juice_up(0.3, 0.5)
+		end
+		return should_debuff
+	end,
+	defeat = function(_)
+		local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
+		if joker then
+			joker:juice_up(0.3, 0.5)
 		end
 	end,
 	disabled = function(_)
-		if G.GAME.current_round.last_obtained_joker_unique_val ~= 0 then
-			local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
-			if joker then
-				joker:set_debuff(false)
-				joker:juice_up()
-			end
-		end
-	end,
-	defeat = function(_)
-		if G.GAME.current_round.last_obtained_joker_unique_val ~= 0 then
-			local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
-			if joker then
-				joker:set_debuff(false)
-				joker:juice_up()
-			end
+		local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
+		if joker then
+			joker:juice_up(0.3, 0.5)
 		end
 	end
 }
 
 -- Hooking to Game.init_game_object to register extra data for The Insecurity
-local igo = Game.init_game_object
-function Game:init_game_object()
-	local ret = igo(self)
-
-	ret.current_round.last_obtained_joker_unique_val = 0
-
-	return ret
-end
+LuaMixin.Inject_Tail {
+	namespace = Game,
+	original_func_name = "init_game_object",
+	injected_code = function(ret, self)
+		ret.current_round.last_obtained_joker_unique_val = 0
+	end 
+}
 
 -- Hooking into Card.add_to_deck to get the unique id of most recently obtained joker for The Insecurity boss blind
-local add_to_deck_old = Card.add_to_deck
-function Card:add_to_deck(from_debuff)
-	local ret = add_to_deck_old(self, from_debuff)
-
-	if not from_debuff and self.ability.set == 'Joker' then
-		G.GAME.current_round.last_obtained_joker_unique_val = self.unique_val
-	end
-
-	return ret
-end
+LuaMixin.Inject_Tail {
+	namespace = Card,
+	original_func_name = "add_to_deck",
+	injected_code = function(ret, self, from_debuff)
+		if not from_debuff and self.ability.set == 'Joker' then
+			G.GAME.current_round.last_obtained_joker_unique_val = self.unique_val
+		end
+	end 
+}
 
 -- Hooking into Card.remove_from_deck to set last_obtained_joker_unique_val back to 0 when it's removed from the deck
-local remove_from_deck_old = Card.remove_from_deck
-function Card:remove_from_deck(from_debuff)
-	local ret = remove_from_deck_old(self, from_debuff)
-
-	if not from_debuff and G.GAME.current_round.last_obtained_joker_unique_val == self.unique_val and self.ability.set == 'Joker' then
-		G.GAME.current_round.last_obtained_joker_unique_val = 0
-	end
-
-	return ret
-end
+LuaMixin.Inject_Tail {
+	namespace = Card,
+	original_func_name = "remove_from_deck",
+	injected_code = function(ret, self, from_debuff)
+		if not from_debuff and G.GAME.current_round.last_obtained_joker_unique_val == self.unique_val and self.ability.set == 'Joker' then
+			G.GAME.current_round.last_obtained_joker_unique_val = 0
+		end
+	end 
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- The Gambit
@@ -316,14 +304,16 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_GAMBIT.REWARD,
 	mult = AST.BLIND.THE_GAMBIT.BASE_MULT,
 	boss = { min = AST.BLIND.THE_GAMBIT.BOSS_MIN, max = AST.BLIND.THE_GAMBIT.BOSS_MAX },
-
-	-- Extra function, added via a lovely patch, which runs for each scored card
 	card_scored = function(self, card)
 		if card:is_face() then
 			G.E_MANAGER:add_event(Event({trigger = 'after', blocking = false, delay = 0.1, func = function()
-				card:juice_up(0.3, 0.5)
-				ease_dollars(-G.GAME.dollars, true)
-				return true
+					card:juice_up(0.3, 0.5)
+
+					if G.GAME.dollars ~= 0 then
+						ease_dollars(-G.GAME.dollars, true)
+					end
+
+					return true
 				end
 			}))
 			return false
@@ -345,14 +335,16 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_PIT.REWARD,
 	mult = AST.BLIND.THE_PIT.BASE_MULT,
 	boss = { min = AST.BLIND.THE_PIT.BOSS_MIN, max = AST.BLIND.THE_PIT.BOSS_MAX },
-
-	-- Extra function, added via a lovely patch, which runs for each scored card
 	card_scored = function(_, card)
 		if card:get_id() == 2 or card:get_id() == 3 or card:get_id() == 4 or card:get_id() == 5 then
 			G.E_MANAGER:add_event(Event({trigger = 'after', blocking = false, delay = 0.1, func = function()
-				card:juice_up(0.3, 0.5)
-				ease_dollars(-G.GAME.dollars, true)
-				return true
+					card:juice_up(0.3, 0.5)
+
+					if G.GAME.dollars ~= 0 then
+						ease_dollars(-G.GAME.dollars, true)
+					end
+					
+					return true
 				end
 			}))
 			return false
@@ -527,6 +519,32 @@ SMODS.Blind {
 		end
 
 		return false
+	end
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+-- The Shredder
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Registering
+SMODS.Blind {
+	key = AST.BLIND.THE_SHREDDER.NAME,
+	atlas = AST.BLIND.ATLAS,
+	pos = { x = 0, y = AST.BLIND.THE_SHREDDER.ATLAS_ROW },
+	boss_colour = AST.BLIND.THE_SHREDDER.COLOR,
+	dollars = AST.BLIND.THE_SHREDDER.REWARD,
+	mult = AST.BLIND.THE_SHREDDER.BASE_MULT,
+	boss = { min = AST.BLIND.THE_SHREDDER.BOSS_MIN, max = AST.BLIND.THE_SHREDDER.BOSS_MAX },
+	set_blind = function(_)
+		for _, v in ipairs(G.consumeables.cards) do
+			G.E_MANAGER:add_event(Event({func = function()
+				v.getting_sliced = true
+				v:start_dissolve({HEX("57ecab")}, nil, 1.6)
+				play_sound("slice1", 0.96+math.random()*0.08)
+				return true
+			end
+		}))
+		end
 	end
 }
 

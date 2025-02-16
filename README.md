@@ -13,6 +13,11 @@ So far this mod only contains 10 new Boss Blinds, and 5 Jokes.
 
 ## Changelog
 
+### Update 1.5.0
+* New boss blind **The Shredder**
+* Miscallaneous visual improvements
+* Prevented modded ranks from being affected by **The Razor** until further notice. We don't want crashes or underfined behaviour now, do we?
+
 ### Patch 1.4.1
 * Fixed bug when **Officinaphobia** mult gain still triggers after redeeming a voucher or buying a booster pack
 

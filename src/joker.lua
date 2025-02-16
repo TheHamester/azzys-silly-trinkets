@@ -18,7 +18,7 @@ SMODS.Atlas {
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
--- # Registering modded jokers #
+-- # Modded Jokers Implementation #
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -53,26 +53,20 @@ SMODS.Joker {
                 }
             end
 
-            G.E_MANAGER:add_event(Event({
+            play_sound(AST.SOUND.REVERSE_POLARITY_EXPLODE.KEY, 0.96+math.random()*0.08)
+            card:juice_up(0.3, 0.4)
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
                 func = function()
-                    play_sound(AST.SOUND.REVERSE_POLARITY_EXPLODE.KEY, 0.96+math.random()*0.08)
-                    card.T.r = -0.2
-                    card:juice_up(0.3, 0.4)
-                    card.states.drag.is = true
-                    card.children.center.pinch.x = true
-                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
-                        func = function()
-                                G.jokers:remove_card(card)
-                                card:remove()
-                                card = nil
-                            return true; end})) 
-                    return true
+                    G.jokers:remove_card(card)
+                    card:remove()
+                    card = nil
+                    return true; 
                 end
             }))
 
             return { 
                 swap = true,
-                message = localize('b_ast_exploded'),
+                message = localize('b_ast_exploded')
             }
         end
     end
@@ -97,32 +91,37 @@ SMODS.Joker {
 }
 
 -- Hook to CardArea.add_to_highlighted to temporarily modify highlighted_limit
-local add_to_highlighted_old = CardArea.add_to_highlighted
-function CardArea:add_to_highlighted(card, silent)
-    local cardio = find_joker(AST.JOKER.CARDIO.KEY)
-    local old_highlighted_limit = self.config.highlighted_limit
+LuaMixin.Inject {
+    namespace = CardArea,
+    original_func_name = "add_to_highlighted",
+    injected_code_head = function(context, self, card, silent)
+        local cardio = find_joker(AST.JOKER.CARDIO.KEY)
 
-    if self.config.type == 'hand' and next(cardio) then self.config.highlighted_limit = self.config.highlighted_limit + cardio[1].ability.extra.extra_discards end
-    add_to_highlighted_old(self, card, silent)
-    self.config.highlighted_limit = old_highlighted_limit
-end
+        context.old_highlighted_limit = self.config.highlighted_limit
+        if self.config.type == 'hand' and next(cardio) then 
+            self.config.highlighted_limit = self.config.highlighted_limit + cardio[1].ability.extra.extra_discards 
+        end
+    end,
+    injected_code_tail = function(context, self, card, silent)
+        self.config.highlighted_limit = context.old_highlighted_limit
+    end
+}
 
 -- Hooking into Card.remove_from_deck to deselect extra cards after card is removed from the jokers
-local remove_from_deck_old = Card.remove_from_deck
-function Card:remove_from_deck(from_debuff)
-	local ret = remove_from_deck_old(self, from_debuff)
+LuaMixin.Inject_Tail {
+    namespace = Card,
+    original_func_name = "remove_from_deck",
+    injected_code = function(ret, self, from_debuff)
+        if not G.hand then return ret end
 
-    if not G.hand then return ret end
-
-	if not from_debuff and self.ability.set == "Joker" and self.ability.name == AST.JOKER.CARDIO.KEY and #G.hand.highlighted > G.hand.config.highlighted_limit then
-        local highlighted = #G.hand.highlighted
-        for i = highlighted, G.hand.config.highlighted_limit + 1, -1 do
-            G.hand:remove_from_highlighted(G.hand.highlighted[i])
+        if not from_debuff and self.ability.set == "Joker" and self.ability.name == AST.JOKER.CARDIO.KEY and #G.hand.highlighted > G.hand.config.highlighted_limit then
+            local highlighted = #G.hand.highlighted
+            for i = highlighted, G.hand.config.highlighted_limit + 1, -1 do
+                G.hand:remove_from_highlighted(G.hand.highlighted[i])
+            end
         end
-	end
-
-	return ret
-end
+    end
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Paul
@@ -202,9 +201,9 @@ SMODS.Joker {
     loc_vars = function(_, _, card) return { vars = { card.ability.extra.mult, card.ability.extra.mult_gain } } end,
     rarity = AST.JOKER.OFFICINAPHOBIA.RARITY,
     cost = AST.JOKER.OFFICINAPHOBIA.COST,
+    blueprint_compat = true,
     unlocked = true,
     discovered = AST.DEBUG_MODE,
-    blueprint_compat = true,
     calculate = function(_, card, context)
         if context.ending_shop and not context.blueprint then
             if G.GAME.current_round.nothing_was_purchased then
@@ -226,40 +225,41 @@ SMODS.Joker {
 }
 
 -- Hooking to Game.init_game_object to register extra data for Officinaphobia
-local igo = Game.init_game_object
-function Game:init_game_object()
-	local ret = igo(self)
-
-	ret.current_round.nothing_was_purchased = true
-
-	return ret
-end
+LuaMixin.Inject_Tail {
+	namespace = Game,
+	original_func_name = "init_game_object",
+	injected_code = function(ret, self)
+        ret.current_round.nothing_was_purchased = true
+		return ret
+	end
+}
 
 -- Hooking to G.FUNCS.buy_from_shop to set current_round.nothing_was_purchased to false
-local buy_from_shop_old = G.FUNCS.buy_from_shop
-G.FUNCS.buy_from_shop = function(e)
-    local ret = buy_from_shop_old(e)
-
-    G.GAME.current_round.nothing_was_purchased = false
-
-    return ret
-end
+LuaMixin.Inject_Tail {
+	namespace = G.FUNCS,
+	original_func_name = "buy_from_shop",
+	injected_code = function(ret, self)
+        G.GAME.current_round.nothing_was_purchased = false
+	end
+}
 
 -- Hooking into Card.open to set current_round.nothing_was_purchased to false when a pack in the shop is open
-local card_open_old = Card.open
-function Card:open()
-    card_open_old(self)
-
-    G.GAME.current_round.nothing_was_purchased = false
-end
+LuaMixin.Inject_Tail {
+	namespace = Card,
+	original_func_name = "open",
+	injected_code = function(ret, self)
+        G.GAME.current_round.nothing_was_purchased = false
+	end
+}
 
 -- Hooking into Card.redeem to set current_round.nothing_was_purchased to false a voucher in the shop is redeemed
-local card_redeem_old = Card.redeem
-function Card:redeem()
-    card_redeem_old(self)
-
-    G.GAME.current_round.nothing_was_purchased = false
-end
+LuaMixin.Inject_Tail {
+	namespace = Card,
+	original_func_name = "redeem",
+	injected_code = function(ret, self)
+        G.GAME.current_round.nothing_was_purchased = false
+	end
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Match 3
@@ -274,19 +274,19 @@ SMODS.Joker {
     loc_vars = function(_, _, card) return { vars = { card.ability.extra.chips, card.ability.extra.chips_gain } } end,
     rarity = AST.JOKER.MATCH_3.RARITY,
     cost = AST.JOKER.MATCH_3.COST,
+    blueprint_compat = true,
     unlocked = true,
     discovered = AST.DEBUG_MODE,
-    blueprint_compat = true,
     calculate = function(_, card, context)
         if context.pre_discard and not context.blueprint then
             local dupes = {}
-            for i, v in ipairs(G.hand.highlighted) do
+            for _, v in ipairs(G.hand.highlighted) do
                 if not dupes[v.base.id] then dupes[v.base.id] = 0 end 
                 dupes[v.base.id] = dupes[v.base.id] + 1
             end
             
             local chips_gain = 0
-            for i, v in pairs(dupes) do
+            for _, v in pairs(dupes) do
                 if v >= 3 then chips_gain = chips_gain + card.ability.extra.chips_gain * v end
             end
             if chips_gain > 0 then
@@ -317,9 +317,9 @@ SMODS.Joker {
     loc_vars = function(_, _, card) return { vars = {  } } end,
     rarity = AST.JOKER.EJECTED.RARITY,
     cost = AST.JOKER.EJECTED.COST,
+    blueprint_compat = true,
     unlocked = true,
     discovered = AST.DEBUG_MODE,
-    blueprint_compat = true,
     calculate = function(_, card, context)
         if context.discard then 
             if G.GAME.current_round.discards_used <= 0 and #context.full_hand == 1 and context.full_hand[1].base.id == 14 then
@@ -340,25 +340,28 @@ SMODS.Joker {
 }
 
 -- Hooking to Game.init_game_object to register extra data for Ejected
-local igo = Game.init_game_object
-function Game:init_game_object()
-	local ret = igo(self)
-
-	ret.current_round.ejected_most_played_poker_hand = "High Card"
-
-	return ret
-end
+LuaMixin.Inject_Tail {
+	namespace = Game,
+	original_func_name = "init_game_object",
+	injected_code = function(ret, self)
+	    ret.current_round.ejected_most_played_poker_hand = "High Card"
+		return ret
+	end
+}
 
 -- Hooking into evaluate_play to check for most played poker hand being updated
-local evaluate_play_old = G.FUNCS.evaluate_play
-G.FUNCS.evaluate_play = function(e)
-    local text = G.FUNCS.get_poker_hand_info(G.play.cards)
-    evaluate_play_old(e)
-    
-    if G.GAME.hands[text].played >= G.GAME.hands[G.GAME.current_round.ejected_most_played_poker_hand].played then
-        G.GAME.current_round.ejected_most_played_poker_hand = text
-    end
-end
+LuaMixin.Inject{
+	namespace = G.FUNCS,
+	original_func_name = "evaluate_play",
+    injected_code_head = function(context, e)
+        context.text = G.FUNCS.get_poker_hand_info(G.play.cards)
+    end,
+	injected_code_tail = function(context, e)
+        if G.GAME.hands[context.text].played >= G.GAME.hands[G.GAME.current_round.ejected_most_played_poker_hand].played then
+            G.GAME.current_round.ejected_most_played_poker_hand = context.text
+        end
+	end
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- joker.lua End

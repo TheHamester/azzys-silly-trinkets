@@ -179,6 +179,16 @@ AST = {
             BASE_MULT = 2,
             BOSS_MIN = 4,
             BOSS_MAX = 10
+        },
+        THE_SHREDDER = {
+            ATLAS_ROW = 10,
+            NAME = "the_shredder",
+            KEY = "bl_ast_the_shredder",
+            COLOR =  HEX("260022"),
+            REWARD = 5,
+            BASE_MULT = 2,
+            BOSS_MIN = 2,
+            BOSS_MAX = 10
         }
     }
 }

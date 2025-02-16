@@ -61,13 +61,15 @@ return {
 			bl_ast_the_razor = {
 				name = "The Razor",
 				text = {
-					 "Reduces rank of each card scored",
+					 "Reduces rank of",
+					 "each card scored"
 				 }
 			},
 			bl_ast_the_insecurity = {
 				name = "The Insecurity",
 				text = {
-					 "Disables most recently obtained Joker"
+					 "Disables most recently",
+					 "obtained Joker"
 				 }
 			},
 			bl_ast_the_gambit = {
@@ -117,6 +119,13 @@ return {
 				text = {
 					 "All foil jokers and cards",
 					 "are debuffed"
+				 }
+			},
+			bl_ast_the_shredder = {
+				name = "The Shredder",
+				text = {
+					 "All consumables",
+					 "are destroyed"
 				 }
 			}
 		}
