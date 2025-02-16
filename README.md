@@ -15,7 +15,7 @@ So far this mod only contains 10 new Boss Blinds, and 5 Jokes.
 
 ### Update 1.5.0
 * New boss blind **The Shredder**
-* Miscallaneous visual improvements
+* Miscellaneous visual improvements
 * Prevented modded ranks from being affected by **The Razor** until further notice. We don't want crashes or underfined behaviour now, do we?
 
 ### Patch 1.4.1
