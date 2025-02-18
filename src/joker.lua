@@ -96,10 +96,11 @@ LuaMixin.Inject {
     original_func_name = "add_to_highlighted",
     injected_code_head = function(context, self, card, silent)
         local cardio = find_joker(AST.JOKER.CARDIO.KEY)
-
         context.old_highlighted_limit = self.config.highlighted_limit
         if self.config.type == 'hand' and next(cardio) then 
-            self.config.highlighted_limit = self.config.highlighted_limit + cardio[1].ability.extra.extra_discards 
+            for i=1,#cardio do
+                self.config.highlighted_limit = self.config.highlighted_limit + cardio[i].ability.extra.extra_discards
+            end
         end
     end,
     injected_code_tail = function(context, self, card, silent)
@@ -114,9 +115,15 @@ LuaMixin.Inject_Tail {
     injected_code = function(ret, self, from_debuff)
         if not G.hand then return ret end
 
-        if not from_debuff and self.ability.set == "Joker" and self.ability.name == AST.JOKER.CARDIO.KEY and #G.hand.highlighted > G.hand.config.highlighted_limit then
+        local cardio = find_joker(AST.JOKER.CARDIO.KEY)
+        local highlighted_limit = G.hand.config.highlighted_limit
+        for i=1,#cardio do
+            highlighted_limit = highlighted_limit + cardio[i].ability.extra.extra_discards
+        end
+
+        if not from_debuff and self.ability.set == "Joker" and self.ability.name == AST.JOKER.CARDIO.KEY and #G.hand.highlighted > highlighted_limit then
             local highlighted = #G.hand.highlighted
-            for i = highlighted, G.hand.config.highlighted_limit + 1, -1 do
+            for i = highlighted, highlighted_limit + 1, -1 do
                 G.hand:remove_from_highlighted(G.hand.highlighted[i])
             end
         end

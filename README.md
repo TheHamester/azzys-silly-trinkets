@@ -13,6 +13,10 @@ So far this mod only contains 10 new Boss Blinds, and 5 Jokes.
 
 ## Changelog
 
+### Patch 1.5.1
+* Fixed **The Construct** not ignoring cards with no rank (e.g. Stone Cards)
+* Fixed **Cardio** effect not stacking
+
 ### Update 1.5.0
 * New boss blind **The Shredder**
 * Miscellaneous visual improvements

@@ -367,7 +367,7 @@ SMODS.Blind {
 	mult = AST.BLIND.THE_CONSTRUCT.BASE_MULT,
 	boss = { min = AST.BLIND.THE_CONSTRUCT.BOSS_MIN, max = AST.BLIND.THE_CONSTRUCT.BOSS_MAX },
 	recalc_debuff = function(_, card, _)
-		return card.area ~= G.jokers and AST.is_prime(card.base.nominal)
+		return card.area ~= G.jokers and AST.is_prime(card.base.nominal) and not SMODS.has_no_rank(card)
 	end
 }
 
