@@ -34,6 +34,7 @@ SMODS.Joker {
     loc_vars = function(_, _, card) return { vars = { card.ability.extra.energy, card.ability.extra.energy_gain } } end,
     rarity = AST.JOKER.REVERSE_POLARITY.RARITY,
     cost = AST.JOKER.REVERSE_POLARITY.COST,
+    eternal_compat = false,
     unlocked = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
@@ -144,6 +145,7 @@ SMODS.Joker {
     rarity = AST.JOKER.PAUL.RARITY,
     cost = AST.JOKER.PAUL.COST,
     blueprint_compat = true,
+    eternal_compat = false,
     unlocked = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
@@ -209,6 +211,8 @@ SMODS.Joker {
     rarity = AST.JOKER.OFFICINAPHOBIA.RARITY,
     cost = AST.JOKER.OFFICINAPHOBIA.COST,
     blueprint_compat = true,
+    eternal_compat = false,
+    perishable_compat = false,
     unlocked = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
@@ -282,6 +286,7 @@ SMODS.Joker {
     rarity = AST.JOKER.MATCH_3.RARITY,
     cost = AST.JOKER.MATCH_3.COST,
     blueprint_compat = true,
+    perishable_compat = false,
     unlocked = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)

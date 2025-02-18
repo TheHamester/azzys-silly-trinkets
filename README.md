@@ -13,6 +13,10 @@ So far this mod only contains 10 new Boss Blinds, and 5 Jokes.
 
 ## Changelog
 
+### Patch 1.5.2
+* **Paul** and **Reverse Polarity** are no longer Eternal comaptible
+* **Match 3** and **Officinaphobia** are no longer Perishable compatible
+
 ### Patch 1.5.1
 * Fixed **The Construct** not ignoring cards with no rank (e.g. Stone Cards)
 * Fixed **Cardio** effect not stacking
