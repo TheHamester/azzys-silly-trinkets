@@ -57,7 +57,7 @@ AST = {
             ATLAS_COL = 4,
             NAME = "match_3",
             KEY = "j_ast_match_3",
-            RARITY = 2,
+            RARITY = 3,
             COST = 5
         },
         EJECTED = {
