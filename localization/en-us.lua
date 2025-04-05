@@ -4,9 +4,9 @@ return {
 			j_ast_reverse_polarity = {
 				name = "Reverse Polarity",
 				text = {
-					"This Joker gains {X:mult,C:white}X#2#{} Mult, and has",
-					"{C:green}#3# in #4#{} probability to self destruct",
-					"when a {C:attention}Tarot{} card is used.",
+					"This Joker gains {X:mult,C:white} X#2# {} Mult, when a {C:attention}#3#{} card is used",
+					"Self destructs if a {C:attention}#4#{} card is used instead",
+					"{C:attention}Tarot{} and {C:attention}Planet{} switch roles every Mult gain",
 					"{C:inactive}(Currently {X:mult,C:white} X#1# {C:inactive} Mult)"
 				}
 			},

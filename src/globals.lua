@@ -21,7 +21,8 @@ AST = {
         ATLAS_HEIGHT = 95,
 
         REVERSE_POLARITY = {
-            ATLAS_ROW = 0,
+            ATLAS_ROW_PLANET = 0,
+            ATLAS_ROW_TAROT = 1,
             ATLAS_COL = 0,
             NAME = "reverse_polarity",
             KEY = "j_ast_reverse_polarity",

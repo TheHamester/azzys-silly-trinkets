@@ -29,9 +29,9 @@ SMODS.Atlas {
 SMODS.Joker {
     key = AST.JOKER.REVERSE_POLARITY.NAME,
     atlas = AST.JOKER.ATLAS,
-    pos = { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW },
-    config = { extra = { x_mult = 1, x_mult_gain = 0.2, explode_prob = 50 } },
-    loc_vars = function(_, _, card) return { vars = { card.ability.extra.x_mult, card.ability.extra.x_mult_gain, G.GAME.probabilities.normal, card.ability.extra.explode_prob } } end,
+    pos = { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW_TAROT },
+    config = { extra = { x_mult = 1, x_mult_gain = 0.2, must_use_type = "Tarot", wrong_use_type = "Planet" } },
+    loc_vars = function(_, _, card) return { vars = { card.ability.extra.x_mult, card.ability.extra.x_mult_gain, localize("k_"..card.ability.extra.must_use_type:lower()), localize("k_"..card.ability.extra.wrong_use_type:lower()) } } end,
     rarity = AST.JOKER.REVERSE_POLARITY.RARITY,
     cost = AST.JOKER.REVERSE_POLARITY.COST,
     eternal_compat = false,
@@ -39,10 +39,8 @@ SMODS.Joker {
     unlocked = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
-        if context.using_consumeable and context.consumeable.ability.set == "Tarot" and not context.blueprint then
-            card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_gain
-
-            if pseudorandom("reverse_polarity") < G.GAME.probabilities.normal / card.ability.extra.explode_prob then
+        if context.using_consumeable and (context.consumeable.ability.set == "Tarot" or context.consumeable.ability.set == "Planet") and not context.blueprint then
+            if card.ability.extra.must_use_type ~= context.consumeable.ability.set then
                 G.E_MANAGER:add_event(Event({
                     func = function()
                         play_sound(AST.SOUND.REVERSE_POLARITY_EXPLODE.KEY) 
@@ -63,6 +61,19 @@ SMODS.Joker {
                 return { message = localize('b_ast_exploded') }
             end
 
+            card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_gain
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                    card:juice_up(0.3, 0.4)
+                        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                            func = function()
+                                card.ability.extra.must_use_type = card.ability.extra.must_use_type == "Tarot" and "Planet" or "Tarot"
+                                card.ability.extra.wrong_use_type = card.ability.extra.wrong_use_type == "Tarot" and "Planet" or "Tarot"
+                        return true; end})) 
+                    return true
+                end
+            }))
+
             return { message = localize{ type = 'variable', key = 'a_xmult', vars = { card.ability.extra.x_mult } } }
         end
 
@@ -74,6 +85,20 @@ SMODS.Joker {
         end
     end
 }
+
+
+local raw_Card_draw = Card.draw
+function Card:draw(layer)
+    if self.config.center and (self.config.center.discovered or self.params.bypass_discovery_center) and self.config.center.key == AST.JOKER.REVERSE_POLARITY.KEY then
+        self.children.center:set_sprite_pos(self.ability.extra.must_use_type == "Tarot" 
+            and { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW_TAROT  }
+            or { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW_PLANET  })
+
+        raw_Card_draw(self, layer)
+        return
+    end
+    raw_Card_draw(self, layer)
+end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Cardio
