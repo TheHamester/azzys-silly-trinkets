@@ -7,10 +7,10 @@
 -- Hamester, 2025
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-LuaMixin = {}
+LuaHooks = {}
 
 -- Injecting code before the function call, optionally modifying arguments
-function LuaMixin.Inject_Head(config)
+function LuaHooks.Inject_Head(config)
     local namespace = config.namespace or _G
     local original_func = namespace[config.original_func_name]
     local injected_code = config.injected_code or function(...) end
@@ -23,7 +23,7 @@ function LuaMixin.Inject_Head(config)
 end
 
 -- Injecting code after the function call, optionally modifying the return value
-function LuaMixin.Inject_Tail(config)
+function LuaHooks.Inject_Tail(config)
     local namespace = config.namespace or _G
     local original_func = namespace[config.original_func_name]
     local injected_code = config.injected_code or function(...) end
@@ -36,7 +36,7 @@ function LuaMixin.Inject_Tail(config)
 end
 
 -- Injecting code both before and after, optionally modifying arguments or the return value
-function LuaMixin.Inject(config)
+function LuaHooks.Inject(config)
     local namespace = config.namespace or _G
     local original_func = namespace[config.original_func_name]
     local injected_code_head = config.injected_code_head or function(...) end
@@ -53,11 +53,11 @@ function LuaMixin.Inject(config)
 end
 
 -- Redirecting the function call of a target function during some function to a replacement function
-function LuaMixin.Redirect(config)
+function LuaHooks.Redirect(config)
     local target_func_namespace = config.target_func_namespace or _G
     local target_func_old = target_func_namespace[config.target_func_name]
 
-    LuaMixin.Inject {
+    LuaHooks.Inject {
         namespace = config.original_func_namespace,
         original_func_name = config.original_func_name,
         argument_count = config.original_func_argument_count,

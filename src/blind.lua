@@ -27,7 +27,7 @@ SMODS.Atlas {
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Hooking into G.FUNCS.evaluate_play to inject the blind's card_scored function if it exists
-LuaMixin.Redirect {
+LuaHooks.Redirect {
 	original_func_namespace = G.FUNCS,
 	original_func_name = "evaluate_play",
 	target_func_name = "highlight_card",
@@ -78,7 +78,7 @@ SMODS.Blind {
 }
 
 -- Hooking to Game.init_game_object to register extra data for The Clock
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
 	namespace = Game,
 	original_func_name = "init_game_object",
 	injected_code = function(ret, self)
@@ -148,7 +148,7 @@ local function play_random_hand()
 end
 
 -- Hooking to Game:update to define additional logic for The Clock Boss Blind
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
 	namespace = Game,
 	original_func_name = "update",
 	injected_code = function(ret, self, dt)
@@ -239,6 +239,10 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_INSECURITY.REWARD,
 	mult = AST.BLIND.THE_INSECURITY.BASE_MULT,
 	boss = { min = AST.BLIND.THE_INSECURITY.BOSS_MIN, max = AST.BLIND.THE_INSECURITY.BOSS_MAX },
+	loc_vars = function(_, _, card) 
+		local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
+		return { vars = { joker and localize{type = 'name_text', set = 'Joker', key = joker.config.center.key} or "None" } }
+	end,
 	recalc_debuff = function(_, card, _)
 		local should_debuff = card.unique_val == G.GAME.current_round.last_obtained_joker_unique_val
 		if should_debuff then 
@@ -261,7 +265,7 @@ SMODS.Blind {
 }
 
 -- Hooking to Game.init_game_object to register extra data for The Insecurity
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
 	namespace = Game,
 	original_func_name = "init_game_object",
 	injected_code = function(ret, self)
@@ -270,7 +274,7 @@ LuaMixin.Inject_Tail {
 }
 
 -- Hooking into Card.add_to_deck to get the unique id of most recently obtained joker for The Insecurity boss blind
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
 	namespace = Card,
 	original_func_name = "add_to_deck",
 	injected_code = function(ret, self, from_debuff)
@@ -281,7 +285,7 @@ LuaMixin.Inject_Tail {
 }
 
 -- Hooking into Card.remove_from_deck to set last_obtained_joker_unique_val back to 0 when it's removed from the deck
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
 	namespace = Card,
 	original_func_name = "remove_from_deck",
 	injected_code = function(ret, self, from_debuff)
@@ -536,6 +540,10 @@ SMODS.Blind {
 	mult = AST.BLIND.THE_SHREDDER.BASE_MULT,
 	boss = { min = AST.BLIND.THE_SHREDDER.BOSS_MIN, max = AST.BLIND.THE_SHREDDER.BOSS_MAX },
 	set_blind = function(_)
+		if next(find_joker("Chicot")) then
+			return
+		end
+
 		for _, v in ipairs(G.consumeables.cards) do
 			G.E_MANAGER:add_event(Event({func = function()
 				v.getting_sliced = true

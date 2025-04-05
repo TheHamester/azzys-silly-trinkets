@@ -30,44 +30,46 @@ SMODS.Joker {
     key = AST.JOKER.REVERSE_POLARITY.NAME,
     atlas = AST.JOKER.ATLAS,
     pos = { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW },
-    config = { extra = { energy = 5, energy_gain = 1 } },
-    loc_vars = function(_, _, card) return { vars = { card.ability.extra.energy, card.ability.extra.energy_gain } } end,
+    config = { extra = { x_mult = 1, x_mult_gain = 0.2, explode_prob = 50 } },
+    loc_vars = function(_, _, card) return { vars = { card.ability.extra.x_mult, card.ability.extra.x_mult_gain, G.GAME.probabilities.normal, card.ability.extra.explode_prob } } end,
     rarity = AST.JOKER.REVERSE_POLARITY.RARITY,
     cost = AST.JOKER.REVERSE_POLARITY.COST,
     eternal_compat = false,
+    perishable_compat = false,
     unlocked = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
-        if context.selling_card and context.card.ability.set == "Tarot" and not context.blueprint then
-            card.ability.extra.energy = card.ability.extra.energy + card.ability.extra.energy_gain
-            return { message = localize{ type = 'variable', key = 'b_ast_add_energy', vars = { card.ability.extra.energy } } }
+        if context.using_consumeable and context.consumeable.ability.set == "Tarot" and not context.blueprint then
+            card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_gain
+
+            if pseudorandom("reverse_polarity") < G.GAME.probabilities.normal / card.ability.extra.explode_prob then
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        play_sound(AST.SOUND.REVERSE_POLARITY_EXPLODE.KEY) 
+                        card.T.r = -0.2
+                        card:juice_up(0.3, 0.4)
+                        card.states.drag.is = true
+                        card.children.center.pinch.x = true
+                        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                            func = function()
+                                    G.jokers:remove_card(card)
+                                    card:remove()
+                                    card = nil
+                                return true; end})) 
+                        return true
+                    end
+                }))
+
+                return { message = localize('b_ast_exploded') }
+            end
+
+            return { message = localize{ type = 'variable', key = 'a_xmult', vars = { card.ability.extra.x_mult } } }
         end
 
         if context.joker_main then
-            card.ability.extra.energy = card.ability.extra.energy - 1
-
-            if card.ability.extra.energy > 0 then
-                return { 
-                    sound = "foil2",
-                    swap = true,
-                    message = localize('b_ast_reversed')
-                }
-            end
-
-            play_sound(AST.SOUND.REVERSE_POLARITY_EXPLODE.KEY, 0.96+math.random()*0.08)
-            card:juice_up(0.3, 0.4)
-            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
-                func = function()
-                    G.jokers:remove_card(card)
-                    card:remove()
-                    card = nil
-                    return true; 
-                end
-            }))
-
             return { 
-                swap = true,
-                message = localize('b_ast_exploded')
+                Xmult_mod = card.ability.extra.x_mult,
+                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.x_mult } }
             }
         end
     end
@@ -92,7 +94,7 @@ SMODS.Joker {
 }
 
 -- Hook to CardArea.add_to_highlighted to temporarily modify highlighted_limit
-LuaMixin.Inject {
+LuaHooks.Inject {
     namespace = CardArea,
     original_func_name = "add_to_highlighted",
     injected_code_head = function(context, self, card, silent)
@@ -110,7 +112,7 @@ LuaMixin.Inject {
 }
 
 -- Hooking into Card.remove_from_deck to deselect extra cards after card is removed from the jokers
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
     namespace = Card,
     original_func_name = "remove_from_deck",
     injected_code = function(ret, self, from_debuff)
@@ -236,7 +238,7 @@ SMODS.Joker {
 }
 
 -- Hooking to Game.init_game_object to register extra data for Officinaphobia
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
 	namespace = Game,
 	original_func_name = "init_game_object",
 	injected_code = function(ret, self)
@@ -246,7 +248,7 @@ LuaMixin.Inject_Tail {
 }
 
 -- Hooking to G.FUNCS.buy_from_shop to set current_round.nothing_was_purchased to false
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
 	namespace = G.FUNCS,
 	original_func_name = "buy_from_shop",
 	injected_code = function(ret, self)
@@ -255,7 +257,7 @@ LuaMixin.Inject_Tail {
 }
 
 -- Hooking into Card.open to set current_round.nothing_was_purchased to false when a pack in the shop is open
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
 	namespace = Card,
 	original_func_name = "open",
 	injected_code = function(ret, self)
@@ -264,7 +266,7 @@ LuaMixin.Inject_Tail {
 }
 
 -- Hooking into Card.redeem to set current_round.nothing_was_purchased to false a voucher in the shop is redeemed
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
 	namespace = Card,
 	original_func_name = "redeem",
 	injected_code = function(ret, self)
@@ -352,7 +354,7 @@ SMODS.Joker {
 }
 
 -- Hooking to Game.init_game_object to register extra data for Ejected
-LuaMixin.Inject_Tail {
+LuaHooks.Inject_Tail {
 	namespace = Game,
 	original_func_name = "init_game_object",
 	injected_code = function(ret, self)
@@ -362,7 +364,7 @@ LuaMixin.Inject_Tail {
 }
 
 -- Hooking into evaluate_play to check for most played poker hand being updated
-LuaMixin.Inject{
+LuaHooks.Inject{
 	namespace = G.FUNCS,
 	original_func_name = "evaluate_play",
     injected_code_head = function(context, e)

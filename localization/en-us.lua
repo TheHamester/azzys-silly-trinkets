@@ -4,11 +4,10 @@ return {
 			j_ast_reverse_polarity = {
 				name = "Reverse Polarity",
 				text = {
-					"Swaps {C:mult}Mult{} and {C:chips}Chips{}",
-					"Swapping costs {C:attention}1{} energy",
-					"Gain {C:chips}#2#{} energy when a Tarot card is sold",
-					"Self destructs when energy reaches {C:chips}0{}",
-					"{C:inactive}Currently:{} {C:chips}#1#{} {C:inactive}energy {}"
+					"This Joker gains {X:mult,C:white}X#2#{} Mult, and has",
+					"{C:green}#3# in #4#{} probability to self destruct",
+					"when a {C:attention}Tarot{} card is used.",
+					"{C:inactive}(Currently {X:mult,C:white} X#1# {C:inactive} Mult)"
 				}
 			},
 			j_ast_cardio = {
@@ -21,8 +20,10 @@ return {
 				name = "Paul",
 				text = {
 					"{X:mult,C:white}X#1#{} Mult",
-					"{C:attention}Has{} to be fed a {C:attention}joker{} to",
-					"the {C:attention}right{} at the end of round"
+					"Destroys a {C:attention}Joker{} to the right",
+					"at the end of round.",
+					"Self destructs, if {C:attention}Joker{}",
+					"to the right is missing"
 				}
 			},
 			j_ast_officinaphobia = {
@@ -53,9 +54,11 @@ return {
 		},
 		Blind = {
 			bl_ast_the_clock = {
-				name = "The Clock",
+				name = "The Blitz",
 				text = {
-					 "{C:attention}8{} seconds per hand",
+					 "{C:attention}6{} seconds per hand",
+					 "Plays a random hand",
+					 "on time up"
 				 }
 			},
 			bl_ast_the_razor = {
@@ -69,7 +72,8 @@ return {
 				name = "The Insecurity",
 				text = {
 					 "Disables most recently",
-					 "obtained Joker"
+					 "obtained Joker",
+					 "Currently: #1#"
 				 }
 			},
 			bl_ast_the_gambit = {
@@ -125,17 +129,14 @@ return {
 				name = "The Shredder",
 				text = {
 					 "All consumables",
-					 "are destroyed"
+					 "are destroyed when",
+					 "blind is selected"
 				 }
 			}
 		}
 	},
 	misc = {
-		v_dictionary={
-			b_ast_add_energy = "#1# Energy"
-		},
 		dictionary={
-			b_ast_reversed = "Reversed",
 			b_ast_exploded = "Exploded",
 			b_ast_yummy = "Yummy!",
 			b_ast_starved = "PAUL HAS STARVED"

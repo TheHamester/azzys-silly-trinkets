@@ -13,6 +13,11 @@ So far this mod only contains 10 new Boss Blinds, and 5 Jokes.
 
 ## Changelog
 
+### Update 1.6.0
+* **Reverse Polarity** complete rework
+* Renamed **The Clock** to **The Blitz**; changed the timer to 6 seconds; and it now can appear only at ante 3+
+* Updated some jokers and blinds localization text to make them less ambiguous
+
 ### Patch 1.5.2
 * **Paul** and **Reverse Polarity** are no longer Eternal comaptible
 * **Match 3** and **Officinaphobia** are no longer Perishable compatible

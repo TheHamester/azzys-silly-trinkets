@@ -85,10 +85,10 @@ AST = {
             COLOR =  HEX("006060"),
             REWARD = 5,
             BASE_MULT = 1.5,
-            BOSS_MIN = 2,
+            BOSS_MIN = 3,
             BOSS_MAX = 10,
 
-            TIMER_SECONDS = 8
+            TIMER_SECONDS = 6
         },
         THE_RAZOR = {
             ATLAS_ROW = 1,
