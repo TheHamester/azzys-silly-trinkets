@@ -86,19 +86,19 @@ SMODS.Joker {
     end
 }
 
+-- Hooking to Card.draw to implement dual sprite for Reverse Polarity
+LuaHooks.Inject_Head {
+	namespace = Card,
+	original_func_name = "draw",
+	injected_code = function(_, self, _)
+        if self.config.center and (self.config.center.discovered or self.params.bypass_discovery_center) and self.config.center.key == AST.JOKER.REVERSE_POLARITY.KEY then
+            self.children.center:set_sprite_pos(self.ability.extra.must_use_type == "Tarot" 
+                and { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW_TAROT  }
+                or { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW_PLANET  })
+        end
+	end
+}
 
-local raw_Card_draw = Card.draw
-function Card:draw(layer)
-    if self.config.center and (self.config.center.discovered or self.params.bypass_discovery_center) and self.config.center.key == AST.JOKER.REVERSE_POLARITY.KEY then
-        self.children.center:set_sprite_pos(self.ability.extra.must_use_type == "Tarot" 
-            and { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW_TAROT  }
-            or { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW_PLANET  })
-
-        raw_Card_draw(self, layer)
-        return
-    end
-    raw_Card_draw(self, layer)
-end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Cardio

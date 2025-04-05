@@ -74,7 +74,6 @@ function LuaHooks.Redirect(config)
     }
 end
 
-
 -- Function for finding joker in the deck by it's unique value
 function AST.find_joker_by_unique_val(unique_val) 
     for _, v in ipairs(G.jokers.cards) do
