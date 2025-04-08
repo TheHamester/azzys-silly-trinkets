@@ -2,7 +2,7 @@
 
 **Azzy's Silly Trinkets** (AST) is a Balatro modification which adds silly miscallaeneous content to the game. Mostly serves as a playground for me to experiment and get more acquainted with Balatro modding. Can't guarantee the content is balanced or won't crash your game, but I try my best to keep it robust!  
   
-So far this mod only contains 10 new Boss Blinds, and 5 Jokes.
+So far this mod only contains 10 new Boss Blinds, and 6 Jokes.
 
 ## Installation
 
@@ -13,10 +13,13 @@ So far this mod only contains 10 new Boss Blinds, and 5 Jokes.
 
 ## Changelog
 
+### Update 1.6.1
+* More minor description text clarifications for disambiguation
+
 ### Update 1.6.0
 * **Reverse Polarity** complete rework
 * Renamed **The Clock** to **The Blitz**; changed the timer to 6 seconds; and it now can appear only at ante 3+
-* Updated some jokers and blinds localization text to make them less ambiguous
+* Minor description text clarifications for disambiguation
 
 ### Patch 1.5.2
 * **Paul** and **Reverse Polarity** are no longer Eternal comaptible
