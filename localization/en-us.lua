@@ -4,8 +4,8 @@ return {
 			j_ast_reverse_polarity = {
 				name = "Reverse Polarity",
 				text = {
-					"This Joker gains {X:mult,C:white} X#2# {} Mult, when a {C:attention}#3#{} card is used",
-					"Self destructs if a {C:attention}#4#{} card is used instead",
+					"This Joker gains {X:mult,C:white} X#2# {} Mult, when a {C:attention}#3#{} card is used,",
+					"self destructs if a {C:attention}#4#{} card is used instead",
 					"{C:attention}Tarot{} and {C:attention}Planet{} switch roles every Mult gain",
 					"{C:inactive}(Currently {X:mult,C:white} X#1# {C:inactive} Mult)"
 				}
@@ -21,8 +21,8 @@ return {
 				text = {
 					"{X:mult,C:white}X#1#{} Mult",
 					"Destroys a {C:attention}Joker{} to the right",
-					"at the end of round.",
-					"Self destructs, if {C:attention}Joker{}",
+					"at the end of round,",
+					"self destructs if {C:attention}Joker{}",
 					"to the right is missing"
 				}
 			},
@@ -30,16 +30,16 @@ return {
 				name = "Officinaphobia",
 				text = {
 					"Gains {C:mult}+#2#{} Mult after shop",
-					"if nothing was purchased",
+					"if no card, booster, nor voucher was purchased",
 					"{C:inactive}Currently:{} {C:mult}+#1#{} {C:inactive}Mult {}"
 				}
 			},
 			j_ast_match_3 = {
 				name = "Match 3",
 				text = {
-					"Gains {C:chips}+#2#{} Chips per card if 3 or",
-					"more cards of the {C:attention}same rank{}",
-					"are discarded at the same time",
+					"When 3 or more cards of the {C:attention}same rank{}",
+					"are discarded at the same time,",
+					"gains {C:chips}+#2#{} Chips per discarded card of said rank.",
 					"{C:inactive}Currently:{} {C:chips}+#1#{} {C:inactive}Chips {}"
 				}
 			},
@@ -48,7 +48,7 @@ return {
 				text = {
                     "If {C:attention}first discard{} of round",
                     "has only a single {C:attention}Ace{}, destroy",
-					"it and upgrade your {C:attention}most played hand{}"
+					"it, and upgrade your {C:attention}most played hand{}"
 				}
 			}
 		},

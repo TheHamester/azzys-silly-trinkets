@@ -155,7 +155,7 @@ LuaHooks.Inject_Tail {
 		if G.GAME.blind and G.GAME.blind.name == AST.BLIND.THE_CLOCK.KEY and not G.GAME.blind.disabled then
 			-- Turns out the whole game object is being saved when you quit out of the game (asterisk). some objects, for some reason, during reading
 			-- from the file, are being replaced by the string "\"MANUAL_REPLACE\"", this is such a weird way to go around the bug (?)..
-			if not G.GAME.current_round.the_clock.timer_ui_text or G.GAME.current_round.the_clock.timer_ui_text == [["]].."MANUAL_REPLACE"..[["]] then
+			if not G.GAME.current_round.the_clock.timer_ui_text or type(G.GAME.current_round.the_clock.timer_ui_text) ~= "table" then
 				G.GAME.current_round.the_clock.timer_ui_text = create_timer_ui_box()
 			end
 	
@@ -229,6 +229,16 @@ SMODS.Blind {
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- The Insecurity
 ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Function for finding joker in the deck by it's unique value
+function AST.find_joker_by_unique_val(unique_val) 
+    for _, v in ipairs(G.jokers.cards) do
+        if v.unique_val == unique_val then
+            return v
+        end
+    end
+    return nil
+end
 
 -- Registering
 SMODS.Blind {
@@ -360,6 +370,16 @@ SMODS.Blind {
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 -- The Construct
 ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Function to determine weather the number is prime, not really optimized but... it will do (?)
+function AST.is_prime(n)
+    for i = 2, n^(1/2) do
+        if (n % i) == 0 then
+            return false
+        end
+    end
+    return true
+end
 
 -- Registering
 SMODS.Blind {

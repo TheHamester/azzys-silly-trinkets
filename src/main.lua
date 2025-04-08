@@ -9,7 +9,7 @@
 
 -- Preloading other lua scripts
 assert(SMODS.load_file('src/globals.lua'))()
-assert(SMODS.load_file('src/util.lua'))()
+assert(SMODS.load_file('src/lua_hooks.lua'))()
 assert(SMODS.load_file('src/sound.lua'))()
 assert(SMODS.load_file('src/joker.lua'))()
 assert(SMODS.load_file('src/blind.lua'))()
