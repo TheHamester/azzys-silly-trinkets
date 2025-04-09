@@ -27,7 +27,7 @@ AST = {
             NAME = "reverse_polarity",
             KEY = "j_ast_reverse_polarity",
             RARITY = 2,
-            COST = 6
+            COST = 7
         },
         CARDIO = {
             ATLAS_ROW = 0,

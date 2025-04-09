@@ -30,7 +30,7 @@ SMODS.Joker {
     key = AST.JOKER.REVERSE_POLARITY.NAME,
     atlas = AST.JOKER.ATLAS,
     pos = { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW_TAROT },
-    config = { extra = { x_mult = 1, x_mult_gain = 0.2, must_use_type = "Tarot", wrong_use_type = "Planet" } },
+    config = { extra = { x_mult = 1, x_mult_gain = 0.1, must_use_type = "Tarot", wrong_use_type = "Planet" } },
     loc_vars = function(_, _, card) return { vars = { card.ability.extra.x_mult, card.ability.extra.x_mult_gain, localize("k_"..card.ability.extra.must_use_type:lower()), localize("k_"..card.ability.extra.wrong_use_type:lower()) } } end,
     rarity = AST.JOKER.REVERSE_POLARITY.RARITY,
     cost = AST.JOKER.REVERSE_POLARITY.COST,
