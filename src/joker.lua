@@ -37,6 +37,7 @@ SMODS.Joker {
     eternal_compat = false,
     perishable_compat = false,
     unlocked = true,
+    blueprint_compat = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
         if context.using_consumeable and (context.consumeable.ability.set == "Tarot" or context.consumeable.ability.set == "Planet") and not context.blueprint then
