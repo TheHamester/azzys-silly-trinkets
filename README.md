@@ -13,7 +13,10 @@ So far this mod only contains 10 new Boss Blinds, and 6 Jokes.
 
 ## Changelog
 
-### Update 1.6.1
+### Patch 1.6.2
+* **Reverse Polarity** now costs 7 dollars, and scales by 0.1 instead of 0.2
+
+### Patch 1.6.1
 * More minor description text clarifications for disambiguation
 
 ### Update 1.6.0
