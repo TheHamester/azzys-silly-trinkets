@@ -1,6 +1,6 @@
 # Azzy's Silly Trinkets
 
-**Azzy's Silly Trinkets** (AST) is a [Balatro](https://www.playbalatro.com) modification which adds silly miscallaeneous content to the game. Mostly serves as a playground for me to experiment and get more acquainted with Balatro modding.
+**Azzy's Silly Trinkets** (AST) is a [Balatro](https://www.playbalatro.com) modification which adds silly miscellaneous content to the game. Mostly serves as a playground for me to experiment and get more acquainted with Balatro modding.
   
 So far this mod only contains 10 new Boss Blinds, and 6 Jokes.
 
