@@ -31,7 +31,7 @@ return {
 				text = {
 					"Gains {C:mult}+#2#{} Mult after shop",
 					"if no card, booster, nor voucher was purchased",
-					"{C:inactive}Currently:{} {C:mult}+#1#{} {C:inactive}Mult {}"
+					"{C:inactive}(Currently:{} {C:mult}+#1#{} {C:inactive}Mult){}"
 				}
 			},
 			j_ast_match_3 = {
@@ -40,7 +40,7 @@ return {
 					"When 3 or more cards of the {C:attention}same rank{}",
 					"are discarded at the same time,",
 					"gains {C:chips}+#2#{} Chips per discarded card of said rank.",
-					"{C:inactive}Currently:{} {C:chips}+#1#{} {C:inactive}Chips {}"
+					"{C:inactive}(Currently:{} {C:chips}+#1#{} {C:inactive}Chips){}"
 				}
 			},
 			j_ast_ejected = {
