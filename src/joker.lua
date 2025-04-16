@@ -31,7 +31,15 @@ SMODS.Joker {
     atlas = AST.JOKER.ATLAS,
     pos = { x = AST.JOKER.REVERSE_POLARITY.ATLAS_COL, y = AST.JOKER.REVERSE_POLARITY.ATLAS_ROW_TAROT },
     config = { extra = { x_mult = 1, x_mult_gain = 0.1, must_use_type = "Tarot", wrong_use_type = "Planet" } },
-    loc_vars = function(_, _, card) return { vars = { card.ability.extra.x_mult, card.ability.extra.x_mult_gain, localize("k_"..card.ability.extra.must_use_type:lower()), localize("k_"..card.ability.extra.wrong_use_type:lower()) } } end,
+    loc_vars = function(_, _, card)
+        return { 
+            vars = { card.ability.extra.x_mult, 
+                card.ability.extra.x_mult_gain, 
+                localize("k_"..card.ability.extra.must_use_type:lower()),
+                localize("k_"..card.ability.extra.wrong_use_type:lower())
+            }
+        }
+    end,
     rarity = AST.JOKER.REVERSE_POLARITY.RARITY,
     cost = AST.JOKER.REVERSE_POLARITY.COST,
     eternal_compat = false,
@@ -44,7 +52,7 @@ SMODS.Joker {
             if card.ability.extra.must_use_type ~= context.consumeable.ability.set then
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        play_sound(AST.SOUND.REVERSE_POLARITY_EXPLODE.KEY) 
+                        play_sound(AST.SOUND.REVERSE_POLARITY_EXPLODE.KEY)
                         card.T.r = -0.2
                         card:juice_up(0.3, 0.4)
                         card.states.drag.is = true
