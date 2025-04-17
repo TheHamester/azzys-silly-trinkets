@@ -16,5 +16,5 @@ So far this mod only contains 10 new Boss Blinds, and 6 Jokes.
 This repository is licensed under the [GPL-3.0 License](https://github.com/TheHamester/azzys-silly-trinkets/blob/main/LICENSE)
 
 ## Credits
-* @BakersDozenBagels - for `upscale.bat` and `upscale.sh` scripts go to
-* @itsMapleLeaf - for fixing a spelling mistake in README
+* [BakersDozenBagels](https://github.com/BakersDozenBagels) - for `upscale.bat` and `upscale.sh` scripts
+* [itsMapleLeaf](https://github.com/itsMapleLeaf) - for fixing a spelling mistake in README
