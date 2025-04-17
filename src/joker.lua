@@ -185,7 +185,7 @@ SMODS.Joker {
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
         if context.joker_main then
-            return {
+            return { 
                 Xmult_mod = card.ability.extra.x_mult,
                 message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.x_mult } }
             }
