@@ -192,31 +192,22 @@ SMODS.Blind {
 	mult = AST.BLIND.THE_RAZOR.BASE_MULT,
 	boss = { min = AST.BLIND.THE_RAZOR.BOSS_MIN, max = AST.BLIND.THE_RAZOR.BOSS_MAX },
 	card_scored = function(_, card)
-		-- Cursed check for when a rank is modded, there's no efficiently knowing what modded rank comes before,
-		-- so for now we don't do anything with them
-		if SMODS.Ranks[card.base.value].lc_atlas ~= "cards_1" or SMODS.Ranks[card.base.value].hc_atlas ~= "cards_2" then
-			return false
+		if SMODS.has_no_rank(card) then
+			return true
 		end
 
-		-- This is vanilla behavior and won't work with modded ranks, strength gets
-		local suit_prefix = string.sub(card.base.suit, 1, 1)..'_'
-		local rank_suffix = card.base.id == 2 and 14 or math.max(card.base.id - 1, 2)
-
-		if rank_suffix < 10 then rank_suffix = tostring(rank_suffix)
-		elseif rank_suffix == 10 then rank_suffix = 'T'
-		elseif rank_suffix == 11 then rank_suffix = 'J'
-		elseif rank_suffix == 12 then rank_suffix = 'Q'
-		elseif rank_suffix == 13 then rank_suffix = 'K'
-		elseif rank_suffix == 14 then rank_suffix = 'A'
+		local new_card = SMODS.modify_rank(card, -1)
+		if not new_card then
+			return
 		end
 
-		-- Setting the nominal before we set the base in the event, ebcasue scoring happens faster than the event triggers
-		if rank_suffix == 'A' then card.base.nominal = 11
-		elseif rank_suffix == 'K' or rank_suffix == 'Q' or rank_suffix == 'J' or rank_suffix == 'T' then card.base.nominal = 10
-		else card.base.nominal = card.base.nominal - 1 end
+		local new_nominal = new_card.base.nominal
+		assert(SMODS.modify_rank(card, 1))
+		card.base.nominal = new_nominal
+
 		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.1, func = function()
-			card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
-			play_sound('slice1', 0.96+math.random()*0.08)
+			play_sound('slice1', 0.96 + math.random() * 0.08)
+			assert(SMODS.modify_rank(card, -1))
 			card:juice_up(0.3, 0.5)
 			return true
 		end

@@ -1,5 +1,8 @@
 # Changelog
 
+## Patch 1.6.4
+* **The Razor** now works for modded ranks (I think...)
+
 ## Patch 1.6.3
 * Slightly altered sprite for **Officinaphobia**
 
