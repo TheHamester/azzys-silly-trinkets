@@ -91,7 +91,7 @@ LuaHooks.Inject_Tail {
 		}
 
 		return ret
-	end 
+	end
 }
 
 -- Callback for updating timer text for DynaText UI object
@@ -158,11 +158,11 @@ LuaHooks.Inject_Tail {
 			if not G.GAME.current_round.the_clock.timer_ui_text or type(G.GAME.current_round.the_clock.timer_ui_text) ~= "table" then
 				G.GAME.current_round.the_clock.timer_ui_text = create_timer_ui_box()
 			end
-	
+
 			if not G.GAME.current_round.the_clock.paused and G.STATE == G.STATES.SELECTING_HAND and not G.SETTINGS.paused then
 				G.GAME.current_round.the_clock.remaining_time = G.GAME.current_round.the_clock.remaining_time - dt
 			end
-	
+
 			if G.GAME.current_round.the_clock.remaining_time <= 0 then
 				if not G.GAME.current_round.the_clock.hand_is_being_played then
 					G.GAME.current_round.the_clock.hand_is_being_played = true
@@ -175,7 +175,7 @@ LuaHooks.Inject_Tail {
 				G.GAME.current_round.the_clock.timer_ui_text = nil
 			end
 		end
-	end 
+	end
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -231,7 +231,7 @@ SMODS.Blind {
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Function for finding joker in the deck by it's unique value
-function AST.find_joker_by_unique_val(unique_val) 
+function AST.find_joker_by_unique_val(unique_val)
     for _, v in ipairs(G.jokers.cards) do
         if v.unique_val == unique_val then
             return v
@@ -249,13 +249,13 @@ SMODS.Blind {
 	dollars = AST.BLIND.THE_INSECURITY.REWARD,
 	mult = AST.BLIND.THE_INSECURITY.BASE_MULT,
 	boss = { min = AST.BLIND.THE_INSECURITY.BOSS_MIN, max = AST.BLIND.THE_INSECURITY.BOSS_MAX },
-	loc_vars = function(_, _, card) 
+	loc_vars = function(_, _, card)
 		local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
 		return { vars = { joker and localize{type = 'name_text', set = 'Joker', key = joker.config.center.key} or "None" } }
 	end,
 	recalc_debuff = function(_, card, _)
 		local should_debuff = card.unique_val == G.GAME.current_round.last_obtained_joker_unique_val
-		if should_debuff then 
+		if should_debuff then
 			card:juice_up(0.3, 0.5)
 		end
 		return should_debuff
@@ -280,7 +280,7 @@ LuaHooks.Inject_Tail {
 	original_func_name = "init_game_object",
 	injected_code = function(ret, self)
 		ret.current_round.last_obtained_joker_unique_val = 0
-	end 
+	end
 }
 
 -- Hooking into Card.add_to_deck to get the unique id of most recently obtained joker for The Insecurity boss blind
@@ -291,7 +291,7 @@ LuaHooks.Inject_Tail {
 		if not from_debuff and self.ability.set == 'Joker' then
 			G.GAME.current_round.last_obtained_joker_unique_val = self.unique_val
 		end
-	end 
+	end
 }
 
 -- Hooking into Card.remove_from_deck to set last_obtained_joker_unique_val back to 0 when it's removed from the deck
@@ -302,7 +302,7 @@ LuaHooks.Inject_Tail {
 		if not from_debuff and G.GAME.current_round.last_obtained_joker_unique_val == self.unique_val and self.ability.set == 'Joker' then
 			G.GAME.current_round.last_obtained_joker_unique_val = 0
 		end
-	end 
+	end
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -357,7 +357,7 @@ SMODS.Blind {
 					if G.GAME.dollars ~= 0 then
 						ease_dollars(-G.GAME.dollars, true)
 					end
-					
+
 					return true
 				end
 			}))
