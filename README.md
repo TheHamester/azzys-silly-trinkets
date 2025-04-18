@@ -16,6 +16,7 @@ So far this mod only contains 10 new Boss Blinds, and 6 Jokes.
 This repository is licensed under the [GPL-3.0 License](https://github.com/TheHamester/azzys-silly-trinkets/blob/main/LICENSE)
 
 ## Credits
-* [BakersDozenBagels](https://github.com/BakersDozenBagels) - for `upscale.bat` and `upscale.sh` scripts
-* [RedsToad](https://github.com/RedsToad) and [Emik](https://github.com/Emik03) - for idea of how to fix **Reverse Polarity**
-* [itsMapleLeaf](https://github.com/itsMapleLeaf) - for fixing a spelling mistake in README
+* [BakersDozenBagels](https://github.com/BakersDozenBagels) - `upscale.bat` and `upscale.sh` scripts
+* [RedsToad](https://github.com/RedsToad) and [Emik](https://github.com/Emik03) - idea of how to fix **Reverse Polarity**
+* Axovoxel - idea for **The Insecurity** boss chip design
+* [itsMapleLeaf](https://github.com/itsMapleLeaf) - fixing a spelling mistake in README
