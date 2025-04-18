@@ -17,5 +17,5 @@ This repository is licensed under the [GPL-3.0 License](https://github.com/TheHa
 
 ## Credits
 * [BakersDozenBagels](https://github.com/BakersDozenBagels) - for `upscale.bat` and `upscale.sh` scripts
-* [RedsToad](https://github.com/RedsToad) and [Emik](https://github.com/Emik03) for idea of how to fix **Reverse Polarity**
+* [RedsToad](https://github.com/RedsToad) and [Emik](https://github.com/Emik03) - for idea of how to fix **Reverse Polarity**
 * [itsMapleLeaf](https://github.com/itsMapleLeaf) - for fixing a spelling mistake in README
