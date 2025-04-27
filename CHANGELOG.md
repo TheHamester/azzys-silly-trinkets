@@ -1,5 +1,9 @@
 # Changelog
 
+## Patch 1.6.5
+* Fixed jokers running unintentional logic in `retrigger` context
+* Mirrored **Paul**'s sprite, to clarify it's "eating" direction
+
 ## Patch 1.6.4
 * **The Razor** now works for modded ranks (I think...)
 

@@ -48,7 +48,7 @@ SMODS.Joker {
     blueprint_compat = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
-        if context.using_consumeable and (context.consumeable.ability.set == "Tarot" or context.consumeable.ability.set == "Planet") and not context.blueprint then
+        if context.using_consumeable and (context.consumeable.ability.set == "Tarot" or context.consumeable.ability.set == "Planet") and not context.blueprint and not context.retrigger_joker then
             if card.ability.extra.must_use_type ~= context.consumeable.ability.set then
                 G.E_MANAGER:add_event(Event({
                     func = function()
@@ -191,7 +191,7 @@ SMODS.Joker {
             }
         end
 
-        if context.end_of_round and context.cardarea == G.jokers and not context.blueprint then
+        if context.end_of_round and context.cardarea == G.jokers and not context.blueprint and not context.retrigger_joker then
             local my_pos = nil
             for i = 1, #G.jokers.cards do
                 if G.jokers.cards[i] == card then my_pos = i; break end
@@ -251,7 +251,7 @@ SMODS.Joker {
     unlocked = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
-        if context.ending_shop and not context.blueprint then
+        if context.ending_shop and not context.blueprint and not context.retrigger_joker then
             if G.GAME.current_round.nothing_was_purchased then
                 card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_gain
                 return { message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult } } }
@@ -262,7 +262,7 @@ SMODS.Joker {
         end
 
         if context.joker_main and card.ability.extra.mult > 0 then
-            return { 
+            return {
                 mult_mod = card.ability.extra.mult,
                 message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult } }
             }
@@ -325,10 +325,10 @@ SMODS.Joker {
     unlocked = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
-        if context.pre_discard and not context.blueprint then
+        if context.pre_discard and not context.blueprint and not context.retrigger_joker then
             local dupes = {}
             for _, v in ipairs(G.hand.highlighted) do
-                if not dupes[v.base.id] then dupes[v.base.id] = 0 end 
+                if not dupes[v.base.id] then dupes[v.base.id] = 0 end
                 dupes[v.base.id] = dupes[v.base.id] + 1
             end
             
@@ -343,7 +343,7 @@ SMODS.Joker {
         end
 
         if context.joker_main and card.ability.extra.chips > 0 then
-            return { 
+            return {
                 chip_mod = card.ability.extra.chips,
                 message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chips } }
             }
@@ -368,7 +368,7 @@ SMODS.Joker {
     unlocked = true,
     discovered = AST.DEBUG_MODE,
     calculate = function(_, card, context)
-        if context.discard then 
+        if context.discard then
             if G.GAME.current_round.discards_used <= 0 and #context.full_hand == 1 and context.full_hand[1].base.id == 14 then
                 local text = G.GAME.current_round.ejected_most_played_poker_hand
                 card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')})

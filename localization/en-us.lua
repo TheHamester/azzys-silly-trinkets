@@ -21,16 +21,18 @@ return {
 				text = {
 					"{X:mult,C:white}X#1#{} Mult",
 					"Destroys a {C:attention}Joker{} to the right",
-					"at the end of round,",
-					"self destructs if {C:attention}Joker{}",
-					"to the right is missing"
+					"at the end of round",
+					"Self destructs if the {C:attention}Joker{}",
+					"to the right is missing",
+					"or can't be destroyed"
 				}
 			},
 			j_ast_officinaphobia = {
 				name = "Officinaphobia",
 				text = {
 					"Gains {C:mult}+#2#{} Mult after shop",
-					"if no card, booster, nor voucher was purchased",
+					"if no card, booster,",
+					"nor voucher was purchased",
 					"{C:inactive}(Currently:{} {C:mult}+#1#{} {C:inactive}Mult){}"
 				}
 			},
