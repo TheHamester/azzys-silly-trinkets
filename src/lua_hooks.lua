@@ -4,7 +4,7 @@
 -- lua_hooks.lua 
 -- Functions facilitating creating hooks for in-game functions
 --
--- Hamester, 2025
+-- Hamester, 2026
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 LuaHooks = {}
