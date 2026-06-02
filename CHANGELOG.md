@@ -1,5 +1,8 @@
 # Changelog
 
+## Patch 1.6.6
+* Stabilized for latest SMODS
+
 ## Patch 1.6.5
 * Fixed jokers running unintentional logic in `retrigger` context
 * Mirrored **Paul**'s sprite, to clarify it's "eating" direction

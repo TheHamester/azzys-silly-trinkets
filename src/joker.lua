@@ -123,46 +123,12 @@ SMODS.Joker {
     cost = AST.JOKER.CARDIO.COST,
     blueprint_compat = false,
     unlocked = true,
-    discovered = AST.DEBUG_MODE
-}
-
--- Hook to CardArea.add_to_highlighted to temporarily modify highlighted_limit
-LuaHooks.Inject {
-    namespace = CardArea,
-    original_func_name = "add_to_highlighted",
-    injected_code_head = function(context, self, card, silent)
-        local cardio = find_joker(AST.JOKER.CARDIO.KEY)
-        context.old_highlighted_limit = self.config.highlighted_limit
-        if self.config.type == 'hand' and next(cardio) then 
-            for i=1,#cardio do
-                self.config.highlighted_limit = self.config.highlighted_limit + cardio[i].ability.extra.extra_discards
-            end
-        end
+    discovered = AST.DEBUG_MODE,
+    add_to_deck = function(_, card)
+        SMODS.change_discard_limit(card.ability.extra.extra_discards)
     end,
-    injected_code_tail = function(context, self, card, silent)
-        self.config.highlighted_limit = context.old_highlighted_limit
-    end
-}
-
--- Hooking into Card.remove_from_deck to deselect extra cards after card is removed from the jokers
-LuaHooks.Inject_Tail {
-    namespace = Card,
-    original_func_name = "remove_from_deck",
-    injected_code = function(ret, self, from_debuff)
-        if not G.hand then return ret end
-
-        local cardio = find_joker(AST.JOKER.CARDIO.KEY)
-        local highlighted_limit = G.hand.config.highlighted_limit
-        for i=1,#cardio do
-            highlighted_limit = highlighted_limit + cardio[i].ability.extra.extra_discards
-        end
-
-        if not from_debuff and self.ability.set == "Joker" and self.ability.name == AST.JOKER.CARDIO.KEY and #G.hand.highlighted > highlighted_limit then
-            local highlighted = #G.hand.highlighted
-            for i = highlighted, highlighted_limit + 1, -1 do
-                G.hand:remove_from_highlighted(G.hand.highlighted[i])
-            end
-        end
+    remove_from_deck = function(_, card)
+        SMODS.change_discard_limit(-card.ability.extra.extra_discards)
     end
 }
 
