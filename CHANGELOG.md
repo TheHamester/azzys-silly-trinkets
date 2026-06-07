@@ -1,5 +1,9 @@
 # Changelog
 
+## Patch 1.6.7
+* Changed **Officinaphobia** phrasing
+* Fixed a bug with **The Insecurity** showing nil when no joker was previously purchased
+
 ## Patch 1.6.6
 * Stabilized for latest SMODS
 
