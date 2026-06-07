@@ -30,9 +30,9 @@ return {
 			j_ast_officinaphobia = {
 				name = "Officinaphobia",
 				text = {
-					"Gains {C:mult}+#2#{} Mult after shop",
-					"if no card, booster,",
-					"nor voucher was purchased",
+					"Gains {C:mult}+#2#{} Mult at the",
+					"end of the shop if",
+					"nothing was bought",
 					"{C:inactive}(Currently:{} {C:mult}+#1#{} {C:inactive}Mult){}"
 				}
 			},
