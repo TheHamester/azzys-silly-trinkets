@@ -242,7 +242,10 @@ SMODS.Blind {
 	boss = { min = AST.BLIND.THE_INSECURITY.BOSS_MIN, max = AST.BLIND.THE_INSECURITY.BOSS_MAX },
 	loc_vars = function(_, _, _)
 		local joker = AST.find_joker_by_unique_val(G.GAME.current_round.last_obtained_joker_unique_val)
-		return { vars = { joker and localize{type = 'name_text', set = 'Joker', key = joker.config.center.key} or "None" } }
+		return { vars = { joker and localize{type = 'name_text', set = 'Joker', key = joker.config.center.key} or localize("k_none") } }
+	end,
+	collection_loc_vars = function(self, ...)
+		return self:loc_vars(...)
 	end,
 	recalc_debuff = function(_, card, _)
 		local should_debuff = card.unique_val == G.GAME.current_round.last_obtained_joker_unique_val
