@@ -1,5 +1,8 @@
 # Changelog
 
+## Patch 1.6.8
+* Fixed this mod crashing in blinds collection menu before jokers card area is initialized
+
 ## Patch 1.6.7
 * Changed **Officinaphobia** phrasing
 * Fixed a bug with **The Insecurity** showing nil when no joker was previously purchased

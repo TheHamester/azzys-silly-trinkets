@@ -223,6 +223,10 @@ SMODS.Blind {
 
 -- Function for finding joker in the deck by it's unique value
 function AST.find_joker_by_unique_val(unique_val)
+	if not G.jokers then
+		return nil
+	end
+
     for _, v in ipairs(G.jokers.cards) do
         if v.unique_val == unique_val then
             return v
